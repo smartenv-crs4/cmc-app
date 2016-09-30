@@ -61,14 +61,14 @@ exports.setAuthMsMicroservice=function(doneCallback){
         function(callback){ // create admins and app type tokens
             var users=conf.testConfig.adminokens;
             var usersId=[];
-            async.each(users,function(tokenT,clb){
+            async.eachSeries(users,function(tokenT,clb){
                 var rqparams={
                     url:url+"/usertypes",
                     headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken},
                     body:JSON.stringify({usertype:{name:tokenT}})
                 };
                 request.post(rqparams, function(error, response, body){
-
+                    console.log("USER TOKEN "+body);
                     if(error) {
                         throw err;
                         clb("err");
@@ -89,14 +89,14 @@ exports.setAuthMsMicroservice=function(doneCallback){
             var apps=conf.testConfig.authApptokens.concat(conf.testConfig.apptokens);
             var appsId=[];
             conf.AdminAuthorizedApp=conf.AdminAuthorizedApp.concat(conf.testConfig.authApptokens);
-            async.each(apps,function(tokenT,clb){
+            async.eachSeries(apps,function(tokenT,clb){
                 var rqparams={
                     url:url+"/apptypes",
                     headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken},
                     body:JSON.stringify({apptype:{name:tokenT}})
                 };
                 request.post(rqparams, function(error, response, body){
-                    console.log("Admin App "+body);
+                    console.log("APP TOKEN "+body);
                     if(error) {
                         throw err;
                         clb("err");
@@ -146,7 +146,7 @@ exports.setAuthMsMicroservice=function(doneCallback){
                 };
                 //console.log("ROLE: " + value.method + " ---> " + value.URI);
                 request.post(rqparams, function(error, response, body){
-                    console.log("#######################" + body);
+                    console.log("#######################" + rqparams.body + " ---> " + body);
                     if(error) {
                         throw err;
                         clb("err");
@@ -211,30 +211,32 @@ exports.resetAuthMsStatus = function(callback) {
             });
         },
         function(clb){
-            var roles=conf.testConfig.appsId;
-            async.forEachOf(roles,function(value,key,clbeach){
-                var rqparams={
-                    url:microserviceAuthMS+"/apptypes/"+ value,
-                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
-                };
-                //console.log("ROLE: " + value.method + " ---> " + value.URI);
-                console.log("####### CLEAN APPS TYPE ########")
-                request.delete(rqparams, function(error, response, body){
-                    //console.log(body);
-                    if(error) {
-                        clbeach(error);
-                    }else{
-                        console.log(body);
-                        clbeach();
-                    }
-                });
-
-            },function(err){
-                if(err)
-                    clb(err,"THREE");
-                else
-                    clb(null,"THREE");
-            });
+            clb(null,"ds");
+            //TODO UNCOMMENT
+            // var roles=conf.testConfig.appsId;
+            // async.forEachOf(roles,function(value,key,clbeach){
+            //     var rqparams={
+            //         url:microserviceAuthMS+"/apptypes/"+ value,
+            //         headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+            //     };
+            //     //console.log("ROLE: " + value.method + " ---> " + value.URI);
+            //     console.log("####### CLEAN APPS TYPE ########")
+            //     request.delete(rqparams, function(error, response, body){
+            //         //console.log(body);
+            //         if(error) {
+            //             clbeach(error);
+            //         }else{
+            //             console.log(body);
+            //             clbeach();
+            //         }
+            //     });
+            //
+            // },function(err){
+            //     if(err)
+            //         clb(err,"THREE");
+            //     else
+            //         clb(null,"THREE");
+            // });
         },
         function(clb){
             var roles=conf.testConfig.usersId;
