@@ -211,32 +211,31 @@ exports.resetAuthMsStatus = function(callback) {
             });
         },
         function(clb){
-            clb(null,"ds");
-            //TODO UNCOMMENT
-            // var roles=conf.testConfig.appsId;
-            // async.forEachOf(roles,function(value,key,clbeach){
-            //     var rqparams={
-            //         url:microserviceAuthMS+"/apptypes/"+ value,
-            //         headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
-            //     };
-            //     //console.log("ROLE: " + value.method + " ---> " + value.URI);
-            //     console.log("####### CLEAN APPS TYPE ########")
-            //     request.delete(rqparams, function(error, response, body){
-            //         //console.log(body);
-            //         if(error) {
-            //             clbeach(error);
-            //         }else{
-            //             console.log(body);
-            //             clbeach();
-            //         }
-            //     });
-            //
-            // },function(err){
-            //     if(err)
-            //         clb(err,"THREE");
-            //     else
-            //         clb(null,"THREE");
-            // });
+
+            var roles=conf.testConfig.appsId;
+            async.forEachOf(roles,function(value,key,clbeach){
+                var rqparams={
+                    url:microserviceAuthMS+"/apptypes/"+ value,
+                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+                };
+                //console.log("ROLE: " + value.method + " ---> " + value.URI);
+                console.log("####### CLEAN APPS TYPE ########")
+                request.delete(rqparams, function(error, response, body){
+                    //console.log(body);
+                    if(error) {
+                        clbeach(error);
+                    }else{
+                        console.log(body);
+                        clbeach();
+                    }
+                });
+
+            },function(err){
+                if(err)
+                    clb(err,"THREE");
+                else
+                    clb(null,"THREE");
+            });
         },
         function(clb){
             var roles=conf.testConfig.usersId;

@@ -2,18 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4697eb40-8970-4fab-b03a-0e0eba9ad5a0" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$" afterPath="$PROJECT_DIR$" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms" afterPath="$PROJECT_DIR$/../authms" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/config.js" afterPath="$PROJECT_DIR$/../authms/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/models/apps.js" afterPath="$PROJECT_DIR$/../authms/models/apps.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/models/authEndpoints.js" afterPath="$PROJECT_DIR$/../authms/models/authEndpoints.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/models/users.js" afterPath="$PROJECT_DIR$/../authms/models/users.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/commonfunctions.js" afterPath="$PROJECT_DIR$/../authms/routes/commonfunctions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/actions.js" afterPath="$PROJECT_DIR$/../authms/routes/actions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/appTypes.js" afterPath="$PROJECT_DIR$/../authms/routes/appTypes.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/apps.js" afterPath="$PROJECT_DIR$/../authms/routes/apps.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/auth.js" afterPath="$PROJECT_DIR$/../authms/routes/auth.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/index.js" afterPath="$PROJECT_DIR$/../authms/routes/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/jwtauth.js" afterPath="$PROJECT_DIR$/../authms/routes/jwtauth.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/microserviceReg.js" afterPath="$PROJECT_DIR$/../authms/routes/microserviceReg.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/routes/userTypes.js" afterPath="$PROJECT_DIR$/../authms/routes/userTypes.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/test/appType-api.js" afterPath="$PROJECT_DIR$/../authms/test/appType-api.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/test/appsAuthModel.js" afterPath="$PROJECT_DIR$/../authms/test/appsAuthModel.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/test/usersAuthModel.js" afterPath="$PROJECT_DIR$/../authms/test/usersAuthModel.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../userms/test/testCommonfunctions.js" afterPath="$PROJECT_DIR$/../userms/test/testCommonfunctions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../authms/test/dbTest.js" afterPath="$PROJECT_DIR$/../authms/test/dbTest.js" />
     </list>
     <ignored path="caport2020App-Microservice.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -68,7 +66,7 @@
         <entry file="file://$PROJECT_DIR$/routes/apps.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
-              <caret line="199" column="38" selection-start-line="199" selection-start-column="38" selection-end-line="199" selection-end-column="38" />
+              <caret line="199" column="36" selection-start-line="199" selection-start-column="36" selection-end-line="199" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -107,8 +105,8 @@
       <file leaf-file-name="jwtauth.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/jwtauth.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+            <state relative-caret-position="435">
+              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -117,8 +115,8 @@
       <file leaf-file-name="testCommonfunctions.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/testCommonfunctions.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="213" column="27" selection-start-line="213" selection-start-column="27" selection-end-line="213" selection-end-column="27" />
+            <state relative-caret-position="206">
+              <caret line="212" column="22" selection-start-line="212" selection-start-column="22" selection-end-line="212" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -227,7 +225,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
+              <option name="myItemId" value="routes" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -343,20 +341,21 @@
       <workItem from="1473083663294" duration="5356000" />
       <workItem from="1473747893096" duration="923000" />
       <workItem from="1474874850426" duration="25192000" />
-      <workItem from="1475217444985" duration="4104000" />
+      <workItem from="1475217444985" duration="5291000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66149000" />
+    <option name="totallyTimeSpent" value="67336000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="132" y="23" width="1567" height="893" extended-state="1" />
+    <frame x="132" y="23" width="1567" height="893" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19272496" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32281554" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -372,7 +371,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985657" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32281554" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -668,14 +666,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/testCommonfunctions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="213" column="27" selection-start-line="213" selection-start-column="27" selection-end-line="213" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="335">
@@ -684,18 +674,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/testCommonfunctions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="212" column="22" selection-start-line="212" selection-start-column="22" selection-end-line="212" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/apps.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
-          <caret line="199" column="38" selection-start-line="199" selection-start-column="38" selection-end-line="199" selection-end-column="38" />
+          <caret line="199" column="36" selection-start-line="199" selection-start-column="36" selection-end-line="199" selection-end-column="36" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/jwtauth.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+        <state relative-caret-position="435">
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding />
         </state>
       </provider>
