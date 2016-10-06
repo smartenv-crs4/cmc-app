@@ -50,7 +50,7 @@ describe('Apps API', function () {
                 if (error) console.log("######  2 ERRORE should  login a Authapp: " + error +"  ######");
                 else {
                     console.log("GET ADMIN TOKEN " + body);
-                    response.statusCode.should.be.equal(201);
+                    response.statusCode.should.be.equal(200);
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     adminToken=results.access_credentials.apiKey.token;
@@ -83,6 +83,7 @@ describe('Apps API', function () {
         async.each(range, function (e, cb) {
 
             Apps.create({
+                _id : new mongoose.Types.ObjectId,
                 email:"email" + e + "@email.it",
                 name:"name" +e,
                 avatar:"avatar"+e
@@ -311,12 +312,12 @@ describe('Apps API', function () {
         }, function (error, response,body) {
             if (error) console.log("######  1 ERRORE should  login a Authapp: " + error +"  ######");
             else {
-
+                console.log(body);
                 response.statusCode.should.be.equal(201);
                 var results = JSON.parse(response.body);
                 results.should.have.property('access_credentials');
                 results.should.have.property('created_resource');
-                clientId=results.created_resource.id; // nedeed to cancel app
+                clientId=results.created_resource._id; // nedeed to cancel app
             }
             callb(results.access_credentials.apiKey.token || null);
         });

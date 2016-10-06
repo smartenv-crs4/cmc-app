@@ -143,7 +143,7 @@ router.use(middlewares.parseFields);
  * @apiName Create Application
  * @apiGroup Application
  *
- * @apiDescription Accessible by access_token of type specified in config.js SignUpAuthorizedAppAndMS field. It create a new Application object and return the access_credentials.
+ * @apiDescription Accessible by access_token, It create a new Application object and return the access_credentials.
  *
  *
  * @apiParam {String} access_token access_token to access to this resource. it must be sended in [ body || as query param || header]
@@ -246,7 +246,7 @@ router.post('/signup',[jwtMiddle.decodeToken],function(req, res){
             var loginToken = JSON.parse(body);
 
             if(!loginToken.error){ // ho un token valido
-                application.id=loginToken.userId;
+                application._id=loginToken.userId;
                 delete application['password'];
                 delete application['type'];
                 delete loginToken['userId'];
@@ -254,7 +254,7 @@ router.post('/signup',[jwtMiddle.decodeToken],function(req, res){
                     Application.create(application, function (err, newApp) {
                         if (err) {
                             rqparams = {
-                                url: microserviceBaseURL + '/authapp/' + application.id,
+                                url: microserviceBaseURL + '/authapp/' + application._id,
                                 headers: {'Authorization': "Bearer " + microserviceTokem}
                             };
 
@@ -270,14 +270,14 @@ router.post('/signup',[jwtMiddle.decodeToken],function(req, res){
                             var tmpU = JSON.parse(JSON.stringify(newApp));
                             console.log("new application:" + util.inspect(tmpU));
                             delete tmpU['__v'];
-                            delete tmpU['_id'];
+                            //delete tmpU['_id'];
                             return res.status(201).send({"created_resource": tmpU, "access_credentials": loginToken});
                         }
                     });
                 }catch (ex) {
                     //console.log("ECCCEPTIO "+ ex);
                     rqparams = {
-                        url: microserviceBaseURL + '/authapp/' + application.id,
+                        url: microserviceBaseURL + '/authapp/' + application._id,
                         headers: {'Authorization': "Bearer " + microserviceTokem}
                     };
 
@@ -318,7 +318,7 @@ router.post('/signup',[jwtMiddle.decodeToken],function(req, res){
  * @apiName Login Application
  * @apiGroup Application
  *
- * @apiDescription Accessible by access_token of type specified in config.js SignInAuthorizedAppAndMS field. It login Application and return the access_credentials.
+ * @apiDescription Accessible by access_token, It login Application and return the access_credentials.
  *
  *
  * @apiParam {String} access_token access_token to access to this resource. it must be sended in [ body || as query param || header]
@@ -412,7 +412,7 @@ router.post('/signin',[jwtMiddle.decodeToken] ,function(req, res){
  * @apiName Get Applications
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin user access_token specified in config.js adminUser field. It returns the paginated list of all Applications.
+ * @apiDescription Accessible by admin access_token, It returns the paginated list of all Applications.
  * To set pagination skip and limit, you can do it in the URL request, for example "get /apps?skip=10&limit=50"
  *
  *
@@ -587,7 +587,7 @@ router.get('/:id',[jwtMiddle.decodeToken,middlewares.ensureUserIsAdminOrSelf], f
 
         var id = req.param('id').toString();
 
-    Application.findOne({id:id}, fields, function(err, results){
+    Application.findById(id, fields, function(err, results){
         if(!err){
                 res.send(results);
         }
@@ -668,14 +668,14 @@ router.put('/:id', [jwtMiddle.decodeToken,middlewares.ensureUserIsAdminOrSelf], 
         return res.status(401).send({error:"Forbidden",error_message: 'only admins users can update application type'});
     }
 
-    Application.findOneAndUpdate({id:id}, newVals, {new: true}, function (err, results) {
+    Application.findOneAndUpdate({_id:id}, newVals, {new: true}, function (err, results) {
 
         if (!err) {
             if (results) {
                 var tmpU=JSON.parse(JSON.stringify(results));
                 console.log("new app:"+ util.inspect(tmpU));
                 delete tmpU['__v'];
-                delete tmpU['_id'];
+                //delete tmpU['_id'];
                     res.status(200).send(tmpU);
             }
             else {
@@ -721,7 +721,7 @@ function enableDisable(req,res,value){
  * @apiName ResetPassword
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin or AuthApp access_token defined in config.js, It create a reset password Token.
+ * @apiDescription Accessible by access_token, It create a reset password Token.
  *
  *
  * @apiParam {String} access_token access_token to access to this resource. it must be sended in [ body || as query param || header]
@@ -759,7 +759,7 @@ router.post('/:id/actions/resetpassword', [jwtMiddle.decodeToken], function(req,
 
                             if (!usr)
                                 callback({err_code:404, error: 'NotFound', error_message: "no application found whith " + id + " email"},'one');
-                            id = usr.id;
+                            id = usr._id;
                             callback(null, 'one');
                         });
 
@@ -874,7 +874,7 @@ router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function(req, r
 
                             if (!usr)callback({err_code:404, error: 'NotFound', error_message: "no App found whith " + id + " email"},'one');
 
-                            id = usr.id;
+                            id = usr._id;
                             callback(null, 'one');
                         });
 
@@ -1136,7 +1136,7 @@ router.delete('/:id',[jwtMiddle.decodeToken], function(req, res) {
         if(error) {
             return  res.status(500).send({error:'internal_App_microservice_error', error_message : error +""});
         }else{
-            Application.findOneAndRemove({id:id},  function(err, results){
+            Application.findOneAndRemove({_id:id},  function(err, results){
                 console.log("deleted "+util.inspect(results));
                 if(!err){
                     if (results){

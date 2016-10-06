@@ -12,7 +12,7 @@ var validateEmail = function (email) {
 };
 
 var appSch= conf.AppSchema || {
-        id: {type: Schema.Types.ObjectId, index:true}, // id in Authentication microservice
+        _id: {type: Schema.Types.ObjectId, index:true}, // id in Authentication microservice
         name: String,
         email: {
             type: String,

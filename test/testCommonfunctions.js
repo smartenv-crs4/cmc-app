@@ -7,10 +7,7 @@ var db = require("../models/db");
 var server;
 var app = require('../app');
 var Port = 3020;
-
-
 var microserviceAuthMS=conf.microserviceAuthMS;
-
 
 exports.setAuthMsMicroservice=function(doneCallback){
 
@@ -272,8 +269,6 @@ exports.resetAuthMsStatus = function(callback) {
                 callback(null);
             });
         }
-
-
     });
 
 

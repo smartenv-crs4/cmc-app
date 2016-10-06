@@ -1,5 +1,4 @@
 var testCustomizableParams={
-    //usersType:["UserType1"],
     appsType:["AppTest1"],
     adminusersType:["admin"],
     authAppTypes:["webui"],
@@ -19,11 +18,11 @@ var config = {
         limit:50,
         skip:0,
         logfile:"/var/log/caport2020User-Microservice.log",
-        adminUser:["admin"],
-        AdminAuthorizedApp:["webuims"], // signUp & Login
+        //adminUser:["admin"],
+        //AdminAuthorizedApp:["webuims"], // signUp & Login
         microserviceAuthMS:"http://localhost:3005",
         microserviceUserMs : "http://localhost:3010",
-        MyMicroserviceToken:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3ODg2MTgxMDgwMDJ9.4V6ErKZrPFG_N5uen8dQFpUs8QVOmG_3BLr-JWw-3BA",
+        MyMicroserviceToken:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTEyMTMwNDg2NjZ9.G7OL1LX9cIMSjTme_mvqDgjJneO8vZJphL3P4Lmaxbs",
         testConfig:{
               apptokens:testCustomizableParams.appsType,
               authApptokens:testCustomizableParams.authAppTypes,
@@ -81,10 +80,10 @@ var config = {
         limit:50,
         skip:0,
         logfile:"/var/log/caport2020User-Microservice.log",
-        adminUser:["admin"],
-        AdminAuthorizedApp:["webuims"], // signUp & Login
+        //adminUser:["admin"],
+        //AdminAuthorizedApp:["webuims"], // signUp & Login
         microserviceAuthMS:"http://localhost:3005",
-        MyMicroserviceToken:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiVXNlcnNTZXJ2aWNlIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxNzgxNTQwOTUzMDg4fQ.s-TB-bKM4pGorAb2J4axkVHUrwEGLmtOF4vJpx6bt-M",
+        MyMicroserviceToken:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTEyMTMwNDg2NjZ9.G7OL1LX9cIMSjTme_mvqDgjJneO8vZJphL3P4Lmaxbs",
               //userType:["admin","crocierista" , "ente", "operatore"], //admin is a superuser then it must not be deleted or moved from position [0] in the array
        // appType:["webui", "ext", "user"] //webUi is an internal microservice then it must not be deleted or moved from position [0] in the array
   }

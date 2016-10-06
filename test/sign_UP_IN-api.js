@@ -78,6 +78,7 @@ describe('Apps API', function () {
         async.each(range, function (e, cb) {
 
             Apps.create({
+                _id : new mongoose.Types.ObjectId,
                 email:"email" + e + "@email.it",
                 name:"name" +e,
                 avatar:"avatar"+e
@@ -295,7 +296,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
 
                     var url = APIURL + '/signin';
                     var app = {
@@ -349,7 +350,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
 
                     var url = APIURL + '/signin';
                     var user = {
@@ -400,7 +401,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
 
                     var url = APIURL + '/signin';
                     var user = {
@@ -451,7 +452,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
                 }
                 done();
             });
@@ -480,7 +481,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
 
                     var url = APIURL + '/signin';
                     var user = {
@@ -789,7 +790,7 @@ describe('Apps API', function () {
                 if (error) console.log("######   ERRORE: " + error +"  ######");
                 else {
 
-                    response.statusCode.should.be.equal(201);
+                    response.statusCode.should.be.equal(200);
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     var app = JSON.parse(JSON.stringify(appStandard));
@@ -810,7 +811,7 @@ describe('Apps API', function () {
                             var results = JSON.parse(response.body);
                             results.should.have.property('access_credentials');
                             results.should.have.property('created_resource');
-                            clientId= results.created_resource.id; // nedeed to cancel user; // nedeed to cancel user
+                            clientId= results.created_resource._id; // nedeed to cancel user; // nedeed to cancel user
                         }
                         done();
                     });
@@ -839,7 +840,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
 
                     // make a reset
                     //var url = APIURL+'/'+results.userId+"/actions/resetpassword";
@@ -884,7 +885,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
 
                     // make a reset
                     //var url = APIURL+'/'+results.userId+"/actions/resetpassword";
@@ -929,7 +930,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
 
                     // make a reset
                     var url = APIURL+'/'+clientId+"/actions/resetpassword";
@@ -1051,7 +1052,7 @@ describe('Apps API', function () {
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
                     results.should.have.property('created_resource');
-                    clientId=results.created_resource.id; // nedeed to cancel user
+                    clientId=results.created_resource._id; // nedeed to cancel user
                     var app = {
                         "username": "mario@caport.com",
                         "password": "miciomicio"

@@ -80,6 +80,7 @@ describe('Apps API', function () {
         async.each(range, function (e, cb) {
 
             Apps.create({
+                _id : new mongoose.Types.ObjectId,
                 email:"email" + e + "@email.it",
                 name:"name" +e,
                 avatar:"surname"+e
@@ -204,7 +205,7 @@ describe('Apps API', function () {
                         var results = JSON.parse(response.body);
                         results.should.have.property('access_credentials');
                         results.should.have.property('created_resource');
-                        applicationId=results.created_resource.id; // nedeed to cancel user
+                        applicationId=results.created_resource._id; // nedeed to cancel user
                     }
                    // console.log("ENDONE");
 
