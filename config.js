@@ -126,19 +126,11 @@ switch (process.env['NODE_ENV']) {
 }
 
 async.each(conf, function(param, callback) {
-
-    // Perform operation on file here.
     console.log('Processing Key ' + param);
-
     if(argv[param])
         conf[param]=argv[param];
     callback();
 });
-
-
-
-module.exports.conf = conf;
-module.exports.generalConf = config;
 
 
 
