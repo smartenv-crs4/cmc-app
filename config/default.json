@@ -1,7 +1,7 @@
  {
 
   "dev":{
-    "dbHost":"localhost",
+    "dbHost":"your_db_host_if_not_in_env",
     "dbPort":"27017",
     "dbName":"CP2020APPDEV",
     "limit":50,
@@ -18,7 +18,7 @@
   },
 
   "production":{
-    "dbHost":"localhost",
+    "dbHost":"your_db_host_if_not_in_env",
     "dbPort":"27017",
     "dbName":"CP2020APP",
     "limit":50,
