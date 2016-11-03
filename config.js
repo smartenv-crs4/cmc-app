@@ -125,13 +125,15 @@ switch (process.env['NODE_ENV']) {
 
 }
 
-async.each(conf, function(param, callback) {
-    console.log('Processing Key ' + param);
-    if(argv[param])
-        conf[param]=argv[param];
+async.eachOf(conf, function(param, index,callback) {
+
+    // Perform operation on file here.
+    console.log('Processing Key ' + index);
+
+    if(argv[index])
+        conf[index]=argv[index];
     callback();
 });
-
 
 
 module.exports.conf = conf;
