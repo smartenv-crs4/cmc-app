@@ -1,6 +1,5 @@
 // @file jwtauth.js
 
-var User = require('../models/apps').User;
 var jwt = require('jwt-simple');
 var mytoken=require('../config').conf;
 var request = require('request');
@@ -41,13 +40,11 @@ exports.decodeToken = function(req, res, next) {
             body:JSON.stringify({decode_token:token,URI:URI,method:req.method})
         };
 
-        console.log("richiesta:" + JSON.stringify(rqparams));
 
         var decoded=null;
 
         request.post(rqparams, function(error, response, body){
 
-            console.log("Body In DEcode:"+body);
             if(error) {
                 console.log("ERROR:"+error);
                 return  res.status(500).send({error:'internal_microservice_error', error_message:error+" "});

@@ -546,7 +546,7 @@ describe('Apps API', function () {
                                 if (error) console.log("######  2 ERRORE should  login a Authapp: " + error +"  ######");
                                 else {
 
-                                    response.statusCode.should.be.equal(201);
+                                    response.statusCode.should.be.equal(200);
                                     var url = APIURL+'/'+clientId+"?fields=name";
                                     request.get({url:url,headers:{'Authorization' : "Bearer "+ tokenUtente}},function(error, response, body){
                                         if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");

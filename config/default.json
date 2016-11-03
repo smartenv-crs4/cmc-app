@@ -1,0 +1,30 @@
+ {
+
+  "dev":{
+    "dbHost":"your_db_host_if_not_in_env",
+    "dbPort":"27017",
+    "dbName":"CP2020APPDEV",
+    "limit":50,
+    "skip":0,
+    "logfile":"/var/log/caport2020User-Microservice.log",
+    "microserviceAuthMS":"http://localhost:3005",
+    "microserviceUserMs" : "http://localhost:3010",
+    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTEyMTMwNDg2NjZ9.G7OL1LX9cIMSjTme_mvqDgjJneO8vZJphL3P4Lmaxbs",
+    "testConfig":{
+      "apptokens":["AppTest1"],
+      "authApptokens":["webui"],
+      "adminokens":["admin"]
+    }
+  },
+
+  "production":{
+    "dbHost":"your_db_host_if_not_in_env",
+    "dbPort":"27017",
+    "dbName":"CP2020APP",
+    "limit":50,
+    "skip":0,
+    "logfile":"/var/log/caport2020User-Microservice.log",
+    "microserviceAuthMS":"http://localhost:3005",
+    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTEyMTMwNDg2NjZ9.G7OL1LX9cIMSjTme_mvqDgjJneO8vZJphL3P4Lmaxbs"
+  }
+ }
