@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var LocalStrategy = require('passport-local').Strategy;
 var logger = require('morgan');
 
-var config = require('./config').generalConf;
+var conf = require('propertiesmanager').conf;
 
 var routes = require('./routes/index');
 var users = require('./routes/apps');
@@ -15,14 +15,16 @@ var User = require('./models/apps').User;
 
 var jwt = require('./routes/jwtauth');
 var app = express();
-var conf = null;
 
-if (app.get('env') === 'dev') {
-    conf = config.dev;
-}
-else{
-    conf = config.production;
-}
+
+// var conf = null;
+//
+// if (app.get('env') === 'dev') {
+//     conf = config.dev;
+// }
+// else{
+//     conf = config.production;
+// }
 //require('./models/db')
 //connect to DB
 ///...
