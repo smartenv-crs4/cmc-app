@@ -11,7 +11,7 @@ var app = require('../app');
 var util = require('util');
 var Port = 3020;
 var APIURL = 'http://localhost:' + Port +"/apps" ;
-var UserMSURL = conf.microserviceUserMs+"/users";
+var UserMSURL = conf.userProtocol + "://" + conf.userHost + ":" + conf.userPort + "/users";
 var clientApp;
 var clientId;
 
@@ -107,7 +107,7 @@ describe('Apps API', function () {
 
 
     function deleteFromAuth(id,done){
-        var url = conf.microserviceAuthMS+'/authapp/'+id;
+        var url = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/authapp/'+id;
         clientId=null;
         request.delete({
             url: url,

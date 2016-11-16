@@ -1,15 +1,19 @@
  {
 
   "dev":{
-    "dbHost":"your_db_host_if_not_in_env",
+    "dbHost":"your_db_host",
     "dbPort":"27017",
     "dbName":"CP2020APPDEV",
     "limit":50,
     "skip":0,
     "logfile":"/var/log/caport2020User-Microservice.log",
-    "microserviceAuthMS":"http://localhost:3005",
-    "microserviceUserMs" : "http://localhost:3010",
-    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTEyMTMwNDg2NjZ9.G7OL1LX9cIMSjTme_mvqDgjJneO8vZJphL3P4Lmaxbs",
+    "authProtocol":"http",
+    "authHost":"your_auth_service_host",
+    "authPort":"3000",
+    "userProtocol":"http",
+    "userHost":"your_user_service_host",
+    "userPort":"3001",
+    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXV0aG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxNzkyMjM0MjYyOTAzfQ.tp79MBMuxZmiw7Tz5fyOVmfW91Pa3MsqoAww_0wF6FE",
     "testConfig":{
       "apptokens":["AppTest1"],
       "authApptokens":["webui"],
@@ -18,13 +22,15 @@
   },
 
   "production":{
-    "dbHost":"your_db_host_if_not_in_env",
+    "dbHost":"your_db_host",
     "dbPort":"27017",
     "dbName":"CP2020APP",
     "limit":50,
     "skip":0,
     "logfile":"/var/log/caport2020User-Microservice.log",
-    "microserviceAuthMS":"http://localhost:3005",
-    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTEyMTMwNDg2NjZ9.G7OL1LX9cIMSjTme_mvqDgjJneO8vZJphL3P4Lmaxbs"
+    "authProtocol":"http",
+    "authHost":"your_auth_service_host",
+    "authPort":"3000",
+    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXV0aG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxNzkyMjM0MjYyOTAzfQ.tp79MBMuxZmiw7Tz5fyOVmfW91Pa3MsqoAww_0wF6FE"
   }
  }

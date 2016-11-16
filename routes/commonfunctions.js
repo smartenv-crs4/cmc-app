@@ -4,21 +4,16 @@ var util=require('util');
 var request=require('request');
 var async=require('async');
 
-
-
-
 exports.setConfig= function(callback){
 
 
     async.parallel([
         function(clb){
             var rqparams={
-                url:conf.microserviceAuthMS+ "/tokenactions/getsupeusertokenlist",
+                url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + "/tokenactions/getsupeusertokenlist",
                 headers : {'Authorization' : "Bearer "+ conf.MyMicroserviceToken}
             };
-
             request.get(rqparams, function(error, response, body){
-
                 if(error) {
                     callback({error:'internal_User_microservice_error', error_message : error +""},null);
 
@@ -31,12 +26,10 @@ exports.setConfig= function(callback){
         },
         function(clb){
             var rqparams={
-                url:conf.microserviceAuthMS+ "/tokenactions/getsuperapptokenlist",
+                url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + "/tokenactions/getsuperapptokenlist",
                 headers : {'Authorization' : "Bearer "+ conf.MyMicroserviceToken}
             };
-
             request.get(rqparams, function(error, response, body){
-
                 if(error) {
                     clb({error:'internal_User_microservice_error', error_message : error +""},null);
 

@@ -109,7 +109,7 @@ describe('Apps API', function () {
 
 
     function deleteFromAuth(id,done){
-        var url = conf.microserviceAuthMS+'/authapp/'+id;
+        var url = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/authapp/'+id;
         applicationId=null;
         request.delete({
             url: url,

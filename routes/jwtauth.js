@@ -1,7 +1,7 @@
 // @file jwtauth.js
 
 var jwt = require('jwt-simple');
-var mytoken=require('../config').conf;
+var conf = require('../config').conf;
 var request = require('request');
 var _=require('underscore');
 
@@ -35,8 +35,8 @@ exports.decodeToken = function(req, res, next) {
 
 
         var rqparams={
-            url:mytoken.microserviceAuthMS+'/tokenactions/checkiftokenisauth',
-            headers : {'Authorization' : "Bearer "+ mytoken.MyMicroserviceToken, 'content-type': 'application/json'},
+            url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/tokenactions/checkiftokenisauth',
+            headers : {'Authorization' : "Bearer "+ conf.MyMicroserviceToken, 'content-type': 'application/json'},
             body:JSON.stringify({decode_token:token,URI:URI,method:req.method})
         };
 

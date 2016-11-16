@@ -10,7 +10,7 @@ var async=require('async');
 
 var request = require('request');
 
-var microserviceBaseURL=conf.microserviceAuthMS;
+var microserviceBaseURL = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort;
 var microserviceTokem=conf.MyMicroserviceToken;
 
 router.use(middlewares.parsePagination);
