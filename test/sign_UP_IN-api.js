@@ -111,7 +111,7 @@ describe('Apps API', function () {
         clientId=null;
         request.delete({
             url: url,
-            headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+            headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
         },function(error, response, body){
             if(error) {
                 console.log("######   ERRORE: " + error + "  ######");

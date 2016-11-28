@@ -7,7 +7,7 @@ function customTestConfig(config){
     var adminAuthAppToken=testConfig.adminokens.concat(testConfig.authApptokens);
     var adminAppAuthAppToken=testConfig.adminokens.concat(testConfig.authApptokens).concat(testConfig.apptokens);
 
-    testConfig.myWebUITokenToSignUP=config.MyMicroserviceToken;
+    testConfig.myWebUITokenToSignUP=config.auth_token;
     testConfig.appTypeTest = {
                     "name": "Micio",
                     "email": "mario@caport.com",

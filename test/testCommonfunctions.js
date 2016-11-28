@@ -61,7 +61,7 @@ exports.setAuthMsMicroservice=function(doneCallback){
             async.eachSeries(users,function(tokenT,clb){
                 var rqparams={
                     url:url+"/usertypes",
-                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken},
+                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token},
                     body:JSON.stringify({usertype:{name:tokenT}})
                 };
                 request.post(rqparams, function(error, response, body){
@@ -89,7 +89,7 @@ exports.setAuthMsMicroservice=function(doneCallback){
             async.eachSeries(apps,function(tokenT,clb){
                 var rqparams={
                     url:url+"/apptypes",
-                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken},
+                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token},
                     body:JSON.stringify({apptype:{name:tokenT}})
                 };
                 request.post(rqparams, function(error, response, body){
@@ -116,7 +116,7 @@ exports.setAuthMsMicroservice=function(doneCallback){
             request.post({
                 url: url + "/authapp/signup",
                 body: appBody,
-                headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+                headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
             }, function (error, response,body) {
                 if(error) {
                     throw err;
@@ -138,7 +138,7 @@ exports.setAuthMsMicroservice=function(doneCallback){
             async.forEachOf(roles,function(value,key,clb){
                 var rqparams={
                     url:url+"/authms/authendpoint",
-                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken},
+                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token},
                     body:JSON.stringify({microservice:{name:"userms",URI:value.URI, authToken:value.token, method:value.method}})
                 };
                 //console.log("ROLE: " + value.method + " ---> " + value.URI);
@@ -174,7 +174,7 @@ exports.resetAuthMsStatus = function(callback) {
         function(clb){
             request.del({
                 url: authHost + "/authapp/" + conf.testConfig.webUiID,
-                headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+                headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
             }, function (error, response,body) {
                 if(error) {
                     clb(error,"ONE");
@@ -188,7 +188,7 @@ exports.resetAuthMsStatus = function(callback) {
             async.forEachOf(roles,function(value,key,clbeach){
                 var rqparams={
                     url: authHost + "/authms/authendpoint/" + value.id,
-                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
                 };
                 //console.log("ROLE: " + value.method + " ---> " + value.URI);
                 request.delete(rqparams, function(error, response, body){
@@ -213,7 +213,7 @@ exports.resetAuthMsStatus = function(callback) {
             async.forEachOf(roles,function(value,key,clbeach){
                 var rqparams={
                     url: authHost + "/apptypes/" + value,
-                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
                 };
                 //console.log("ROLE: " + value.method + " ---> " + value.URI);
                 console.log("####### CLEAN APPS TYPE ########")
@@ -239,7 +239,7 @@ exports.resetAuthMsStatus = function(callback) {
             async.forEachOf(roles,function(value,key,clbeach){
                 var rqparams={
                     url: authHost + "/usertypes/" + value,
-                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+                    headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
                 };
                 console.log("####### CLEAN USERS TYPE ########")
                 request.delete(rqparams, function(error, response, body){

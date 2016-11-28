@@ -36,7 +36,7 @@ exports.decodeToken = function(req, res, next) {
 
         var rqparams={
             url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/tokenactions/checkiftokenisauth',
-            headers : {'Authorization' : "Bearer "+ conf.MyMicroserviceToken, 'content-type': 'application/json'},
+            headers : {'Authorization' : "Bearer "+ conf.auth_token, 'content-type': 'application/json'},
             body:JSON.stringify({decode_token:token,URI:URI,method:req.method})
         };
 

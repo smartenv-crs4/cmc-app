@@ -13,7 +13,7 @@
     "userProtocol":"http",
     "userHost":"your_user_service_host",
     "userPort":"3001",
-    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXV0aG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxNzkyMjM0MjYyOTAzfQ.tp79MBMuxZmiw7Tz5fyOVmfW91Pa3MsqoAww_0wF6FE",
+    "auth_token":"your_auth_service_token",
     "testConfig":{
       "apptokens":["AppTest1"],
       "authApptokens":["webui"],
@@ -31,6 +31,6 @@
     "authProtocol":"http",
     "authHost":"your_auth_service_host",
     "authPort":"3000",
-    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXV0aG1zIiwiZW5hYmxlZCI6dHJ1ZSwiZXhwIjoxNzkyMjM0MjYyOTAzfQ.tp79MBMuxZmiw7Tz5fyOVmfW91Pa3MsqoAww_0wF6FE"
+    "auth_token":"your_auth_service_token"
   }
  }

@@ -11,7 +11,7 @@ exports.setConfig= function(callback){
         function(clb){
             var rqparams={
                 url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + "/tokenactions/getsupeusertokenlist",
-                headers : {'Authorization' : "Bearer "+ conf.MyMicroserviceToken}
+                headers : {'Authorization' : "Bearer "+ conf.auth_token}
             };
             request.get(rqparams, function(error, response, body){
                 if(error) {
@@ -27,7 +27,7 @@ exports.setConfig= function(callback){
         function(clb){
             var rqparams={
                 url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + "/tokenactions/getsuperapptokenlist",
-                headers : {'Authorization' : "Bearer "+ conf.MyMicroserviceToken}
+                headers : {'Authorization' : "Bearer "+ conf.auth_token}
             };
             request.get(rqparams, function(error, response, body){
                 if(error) {
