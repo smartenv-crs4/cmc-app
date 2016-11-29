@@ -21,7 +21,7 @@ var APIURL = 'http://localhost:' + Port +"/apps" ;
 var adminToken;
 var clientApp;
 var clientId;
-var UserMSURL = conf.microserviceUserMs + "/users";
+var UserMSURL = conf.userProtocol + "://" + conf.userHost + ":" + conf.userPort + "/users";
 var commonFunctioTest=require("./testCommonfunctions");
 
 
@@ -284,11 +284,11 @@ describe('Apps API', function () {
 
 
     function deleteFromAuth(id,done){
-        var url = conf.microserviceAuthMS+'/authapp/'+id;
+        var url = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/authapp/'+id;
         clientId=null;
         request.delete({
             url: url,
-            headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+            headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
         },function(error, response, body){
             if(error) {
                 console.log("######   ERRORE: " + error + "  ######");

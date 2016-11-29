@@ -109,11 +109,11 @@ describe('Apps API', function () {
 
 
     function deleteFromAuth(id,done){
-        var url = conf.microserviceAuthMS+'/authapp/'+id;
+        var url = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/authapp/'+id;
         applicationId=null;
         request.delete({
             url: url,
-            headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.MyMicroserviceToken}
+            headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
         },function(error, response, body){
             if(error) {
                 console.log("######   ERRORE: " + error + "  ######");

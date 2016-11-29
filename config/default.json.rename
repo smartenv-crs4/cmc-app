@@ -1,0 +1,36 @@
+ {
+
+  "dev":{
+    "dbHost":"your_db_host",
+    "dbPort":"27017",
+    "dbName":"CP2020APPDEV",
+    "limit":50,
+    "skip":0,
+    "logfile":"/var/log/caport2020User-Microservice.log",
+    "authProtocol":"http",
+    "authHost":"your_auth_service_host",
+    "authPort":"3000",
+    "userProtocol":"http",
+    "userHost":"your_user_service_host",
+    "userPort":"3001",
+    "auth_token":"your_auth_service_token",
+    "testConfig":{
+      "apptokens":["AppTest1"],
+      "authApptokens":["webui"],
+      "adminokens":["admin"]
+    }
+  },
+
+  "production":{
+    "dbHost":"your_db_host",
+    "dbPort":"27017",
+    "dbName":"CP2020APP",
+    "limit":50,
+    "skip":0,
+    "logfile":"/var/log/caport2020User-Microservice.log",
+    "authProtocol":"http",
+    "authHost":"your_auth_service_host",
+    "authPort":"3000",
+    "auth_token":"your_auth_service_token"
+  }
+ }
