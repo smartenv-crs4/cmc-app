@@ -26,13 +26,17 @@ exports.decodeToken = function(req, res, next) {
 
     if (token) {
 
-        var URI;
-        var path=(req.route.path=="/") ? "" : req.route.path;
-        if(_.isEmpty(req.baseUrl))
-            URI=req.path+path;
-        else
-            URI=req.baseUrl+path;
+        // var URI;
+        // var path=(req.route.path=="/") ? "" : req.route.path;
+        // if(_.isEmpty(req.baseUrl))
+        //     URI=req.path+path;
+        // else
+        //     URI=req.baseUrl+path;
 
+
+        var path= (_.isEmpty(req.route)) ?  req.path : req.route.path;
+        var URI=(_.isEmpty(req.baseUrl)) ? path : (req.baseUrl+path) ;
+        URI=URI.endsWith("/") ? URI : URI+"/";
 
         var rqparams={
             url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/tokenactions/checkiftokenisauth',

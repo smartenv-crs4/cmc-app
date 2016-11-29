@@ -556,7 +556,7 @@ router.get('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
     if (!fields)
         fields = '-hash -salt -__v -_id';
 
-    var id = req.param('id').toString();
+    var id = (req.params.id).toString();
 
     Application.findById(id, fields, function(err, results){
         if(!err){
@@ -614,7 +614,7 @@ router.put('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
         return res.status(400).send({error: "BadRequest", error_message: 'request body missing'});
     }
 
-    var id = req.param('id').toString();
+    var id = (req.params.id).toString();
     var newVals;
 
     try {
@@ -673,7 +673,7 @@ router.put('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
 
 function enableDisable(req, res, value) {
 
-    var id = req.param('id').toString();
+    var id = (req.params.id).toString();
     var rqparams = {
         url: value ? microserviceBaseURL + "/authApp/" + id + '/actions/enable' : microserviceBaseURL + "/authApp/" + id + '/actions/disable',
         headers: {'Authorization': "Bearer " + microserviceTokem}
@@ -720,7 +720,7 @@ function enableDisable(req, res, value) {
  */
 router.post('/:id/actions/resetpassword', [jwtMiddle.decodeToken], function (req, res) {
 
-    var id = req.param('id').toString();
+    var id = (req.params.id).toString();
 
     async.series([
             function (callback) {
@@ -1084,7 +1084,7 @@ router.post('/:id/actions/disable', [jwtMiddle.decodeToken], function (req, res)
  */
 router.delete('/:id', [jwtMiddle.decodeToken], function (req, res) {
 
-    var id = req.param('id').toString();
+    var id = (req.params.id).toString();
 
     var rqparams = {
         url: microserviceBaseURL + "/authApp/" + id,
@@ -1147,7 +1147,7 @@ router.delete('/:id', [jwtMiddle.decodeToken], function (req, res) {
  */
 router.get('/:term/actions/email/find', jwtMiddle.decodeToken, function (req, res) {
 
-    var term = req.param('term'),
+    var term = req.param.term,
         size = req.query.size ? parseInt(req.query.size) : 10,
         query = {},
         sortParams = {};
