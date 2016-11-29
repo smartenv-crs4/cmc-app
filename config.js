@@ -100,11 +100,10 @@
 // }
 
 
-var config = require('./config/default.old');
+var config = require('./config/default.json');
 var async=require('async');
 var argv = require('minimist')(process.argv.slice(2));
 var test=require('./test/testconfig');
-var util=require('util');
 
 console.dir(argv);
 
