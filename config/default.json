@@ -7,9 +7,13 @@
     "limit":50,
     "skip":0,
     "logfile":"/var/log/caport2020User-Microservice.log",
-    "microserviceAuthMS":"http://localhost:3005",
-    "microserviceUserMs" : "http://localhost:3010",
-    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTEyMTMwNDg2NjZ9.G7OL1LX9cIMSjTme_mvqDgjJneO8vZJphL3P4Lmaxbs",
+    "authProtocol":"http",
+    "authHost":"localhost",
+    "authPort":"3005",
+    "userProtocol":"http",
+    "userHost":"localhost",
+    "userPort":"3010",
+    "auth_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTU5NjUxNDY4MjZ9.siYQ5-3pVR4G6rxCrb-Xu_2-LDOFqtxo-YN2L0Bp6lU",
     "testConfig":{
       "apptokens":["AppTest1"],
       "authApptokens":["webui"],
@@ -24,7 +28,9 @@
     "limit":50,
     "skip":0,
     "logfile":"/var/log/caport2020User-Microservice.log",
-    "microserviceAuthMS":"http://localhost:3005",
-    "MyMicroserviceToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTEyMTMwNDg2NjZ9.G7OL1LX9cIMSjTme_mvqDgjJneO8vZJphL3P4Lmaxbs"
+    "authProtocol":"http",
+    "authHost":"localhost",
+    "authPort":"3005",
+    "auth_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoibXMiLCJpc3MiOiJub3QgdXNlZCBmbyBtcyIsImVtYWlsIjoibm90IHVzZWQgZm8gbXMiLCJ0eXBlIjoiYXBwbXMiLCJlbmFibGVkIjp0cnVlLCJleHAiOjE3OTU5NjUxNDY4MjZ9.siYQ5-3pVR4G6rxCrb-Xu_2-LDOFqtxo-YN2L0Bp6lU"
   }
  }

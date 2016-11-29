@@ -15,7 +15,8 @@ var User = require('./models/apps').User;
 
 var jwt = require('./routes/jwtauth');
 var app = express();
-
+var plugin=require('apiextender');
+plugin.extend(app);
 
 // var conf = null;
 //
