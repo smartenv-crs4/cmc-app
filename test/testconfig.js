@@ -25,22 +25,21 @@ function customTestConfig(config){
                   "password": "admin"
     };
 
-    testConfig.AuthRoles=[
-              {URI:"/users/signin",token:testConfig.authApptokens, method:"POST"},
-
-                  {URI:"/apps", token:testConfig.adminokens, method:"GET"},
-                  {URI:"/apps",token:testConfig.adminokens, method:"POST"},
-                  {URI:"/apps/:id",token:adminAppToken, method:"GET"},
-                  {URI:"/apps/:id",token:adminAppToken, method:"PUT"},
-                  {URI:"/apps/:id",token:testConfig.adminokens, method:"DELETE"},
-                  {URI:"/apps/signup",token:adminAuthAppToken, method:"POST"},
-                  {URI:"/apps/signin",token:testConfig.authApptokens, method:"POST"},
-                  {URI:"/apps/:id/actions/resetpassword",token:adminAuthAppToken, method:"POST"},
-                  {URI:"/apps/:id/actions/setpassword",token:adminAppAuthAppToken, method:"POST"},
-                  {URI:"/apps/:id/actions/changeuserid",token:testConfig.adminokens, method:"POST"},
-                  {URI:"/apps/:id/actions/enable",token:testConfig.adminokens, method:"POST"},
-                  {URI:"/apps/:id/actions/disable",token:testConfig.adminokens, method:"POST"},
-                  {URI:"/apps/actions/email/find/:term",token:testConfig.adminokens, method:"GET"}
+    testConfig.AuthRoles = [
+        {URI: "/users/signin", token: testConfig.authApptokens, method: "POST"},
+        {URI: "/apps", token: testConfig.adminokens, method: "GET"},
+        {URI: "/apps", token: testConfig.adminokens, method: "POST"},
+        {URI: "/apps/:id", token: adminAppToken, method: "GET"},
+        {URI: "/apps/:id", token: adminAppToken, method: "PUT"},
+        {URI: "/apps/:id", token: testConfig.adminokens, method: "DELETE"},
+        {URI: "/apps/signup", token: adminAuthAppToken, method: "POST"},
+        {URI: "/apps/signin", token: testConfig.authApptokens, method: "POST"},
+        {URI: "/apps/:id/actions/resetpassword", token: adminAuthAppToken, method: "POST"},
+        {URI: "/apps/:id/actions/setpassword", token: adminAppAuthAppToken, method: "POST"},
+        {URI: "/apps/:id/actions/changeuserid", token: testConfig.adminokens, method: "POST"},
+        {URI: "/apps/:id/actions/enable", token: testConfig.adminokens, method: "POST"},
+        {URI: "/apps/:id/actions/disable", token: testConfig.adminokens, method: "POST"},
+        {URI: "/apps/actions/email/find/:term", token: testConfig.adminokens, method: "GET"}
     ];
     testConfig.webUiID="";
 }
