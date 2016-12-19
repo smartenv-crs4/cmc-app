@@ -9,7 +9,9 @@
     "logfile":"/var/log/caport2020User-Microservice.log",
     "authProtocol":"http",
     "authHost":"your_auth_service_host",
-    "authPort":"3000",
+    "authPort":"80",
+    "apiGwAuthBaseUrl":"/api/auth",
+    "apiVersion":"v1",
     "userProtocol":"http",
     "userHost":"your_user_service_host",
     "userPort":"3001",
@@ -30,7 +32,9 @@
     "logfile":"/var/log/caport2020User-Microservice.log",
     "authProtocol":"http",
     "authHost":"your_auth_service_host",
-    "authPort":"3000",
+    "authPort":"80",
+    "apiGwAuthBaseUrl":"/api/auth",
+    "apiVersion":"v1",
     "auth_token":"your_auth_service_token"
   }
  }

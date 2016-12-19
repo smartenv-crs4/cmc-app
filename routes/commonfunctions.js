@@ -10,7 +10,7 @@ exports.setConfig= function(callback){
     async.parallel([
         function(clb){
             var rqparams={
-                url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + "/tokenactions/getsupeusertokenlist",
+                url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + conf.apiGwAuthBaseUrl + "/" + conf.apiVersion + "/tokenactions/getsupeusertokenlist",
                 headers : {'Authorization' : "Bearer "+ conf.auth_token}
             };
             request.get(rqparams, function(error, response, body){
@@ -26,7 +26,7 @@ exports.setConfig= function(callback){
         },
         function(clb){
             var rqparams={
-                url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + "/tokenactions/getsuperapptokenlist",
+                url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + conf.apiGwAuthBaseUrl + "/" + conf.apiVersion + "/tokenactions/getsuperapptokenlist",
                 headers : {'Authorization' : "Bearer "+ conf.auth_token}
             };
             request.get(rqparams, function(error, response, body){

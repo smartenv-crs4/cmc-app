@@ -39,7 +39,7 @@ exports.decodeToken = function(req, res, next) {
         URI=URI.endsWith("/") ? URI : URI+"/";
 
         var rqparams={
-            url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/tokenactions/checkiftokenisauth',
+            url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + conf.apiGwAuthBaseUrl + "/" + conf.apiVersion + '/tokenactions/checkiftokenisauth',
             headers : {'Authorization' : "Bearer "+ conf.auth_token, 'content-type': 'application/json'},
             body:JSON.stringify({decode_token:token,URI:URI,method:req.method})
         };

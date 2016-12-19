@@ -284,7 +284,7 @@ describe('Apps API', function () {
 
 
     function deleteFromAuth(id,done){
-        var url = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + '/authapp/'+id;
+        var url = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + conf.apiGwAuthBaseUrl + "/" + conf.apiVersion + '/authapp/'+id;
         clientId=null;
         request.delete({
             url: url,
