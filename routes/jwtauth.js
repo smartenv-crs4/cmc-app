@@ -38,8 +38,10 @@ exports.decodeToken = function(req, res, next) {
         var URI=(_.isEmpty(req.baseUrl)) ? path : (req.baseUrl+path) ;
         URI=URI.endsWith("/") ? URI : URI+"/";
 
+        var gw=_.isEmpty(conf.apiGwAuthBaseUrl) ? "" : conf.apiGwAuthBaseUrl + "/" + conf.apiVersion;
+        gw=_.isEmpty(conf.apiVersion) ? gw : gw + "/" + conf.apiVersion;
         var rqparams={
-            url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + conf.apiGwAuthBaseUrl + "/" + conf.apiVersion + '/tokenactions/checkiftokenisauth',
+            url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + gw + '/tokenactions/checkiftokenisauth',
             headers : {'Authorization' : "Bearer "+ conf.auth_token, 'content-type': 'application/json'},
             body:JSON.stringify({decode_token:token,URI:URI,method:req.method})
         };

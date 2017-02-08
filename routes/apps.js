@@ -10,7 +10,10 @@ var async=require('async');
 
 var request = require('request');
 
-var microserviceBaseURL = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + conf.apiGwAuthBaseUrl + "/" + conf.apiVersion;
+
+var gwExists=_.isEmpty(conf.apiGwAuthBaseUrl) ? "" : conf.apiGwAuthBaseUrl + "/" + conf.apiVersion;
+gwExists=_.isEmpty(conf.apiVersion) ? gwExists : gwExists + "/" + conf.apiVersion;
+var microserviceBaseURL = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + gwExists;
 var microserviceTokem=conf.auth_token;
 
 router.use(middlewares.parsePagination);
