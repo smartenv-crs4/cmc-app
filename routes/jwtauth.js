@@ -38,7 +38,7 @@ exports.decodeToken = function(req, res, next) {
         var URI=(_.isEmpty(req.baseUrl)) ? path : (req.baseUrl+path) ;
         URI=URI.endsWith("/") ? URI : URI+"/";
 
-        var gw=_.isEmpty(conf.apiGwAuthBaseUrl) ? "" : conf.apiGwAuthBaseUrl + "/" + conf.apiVersion;
+        var gw=_.isEmpty(conf.apiGwAuthBaseUrl) ? "" : conf.apiGwAuthBaseUrl;
         gw=_.isEmpty(conf.apiVersion) ? gw : gw + "/" + conf.apiVersion;
         var rqparams={
             url: conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + gw + '/tokenactions/checkiftokenisauth',
