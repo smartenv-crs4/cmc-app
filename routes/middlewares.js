@@ -2,29 +2,6 @@ var conf = require('../config').conf;
 var User = require('../models/apps').User;
 
 
-/**
- * @api Configuration Fields
- * @apiVersion 1.0.0
- * @apiName Configuration
- * @apiGroup Configuration
- *
- * @apiDescription This section lists the configuration parameters of the microservice
- *
- * @apiParam {Number} dbPort mongoDb Port number
- * @apiParam {String} dbHost mongoDb Host name
- * @apiParam {String} dbName mongoDb database name
- * @apiParam {Number} limit  default limit param used to paginate get response
- * @apiParam {Number} skip   default skip param used to paginate get response
- * @apiParam {String} logfile log file path
- * @apiParam {Array} adminUser a list of admin User Types (defined in AuthMS) e.g. ["admin"]
- * @apiParam {Array} AdminAuthorizedApp a list of login and signup Authorized app Types (defined in AuthMS) e.g. ["webUi"]
- * @apiParam {String} microserviceAuthMS  BaseUrl of AuthMs microservices
- * @apiParam {String} MyMicroserviceToken the token for this microservice. To get it register this Ms in AuthMs
- * @apiParam {Object} AppSchema Object containing the mongoDb schema of Appl. If not set, a schema defined in models/apps.js will be used
- */
-
-
-
 //Middleware to parse DB query fields selection from request URI
 //Adds dbQueryFields to request
 exports.parseFields = function(req, res, next){

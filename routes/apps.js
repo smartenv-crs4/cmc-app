@@ -130,6 +130,34 @@ router.use(middlewares.parseFields);
 // End Macro
 
 
+//###################################### PROPERTIES FILE DEFAULT.JSON #######################################################
+/**
+ * @api Configuration Fields
+ * @apiVersion 1.0.0
+ * @apiName Configuration
+ * @apiGroup Configuration
+ *
+ * @apiDescription This section lists the configuration parameters of the microservice
+ *
+ * @apiParam {Number} dbPort mongoDb Port number
+ * @apiParam {String} dbHost mongoDb Host name
+ * @apiParam {String} dbName mongoDb database name
+ * @apiParam {Number} limit  default limit param used to paginate get response
+ * @apiParam {Number} skip   default skip param used to paginate get response
+ * @apiParam {String} logfile log file path
+ *
+ * @apiParam {String} authProtocol protocol used to call authms microservice resource
+ * @apiParam {String} authHost authms microservice ip or host name
+ * @apiParam {String} authPort port used to call authms microservice resource
+ * @apiParam {String} apiGwAuthBaseUrl API gateway base url. Mandatory only if a gateway exist in architecture
+ * @apiParam {String} apiVersion auth ms API version
+ * @apiParam {String} auth_token token used to call auth ms
+ */
+//###################################### PROPERTIES FILE DEFAULT.JSON #######################################################
+
+
+
+
 /**
  * @api {post} /apps/signup Register a new Application
  * @apiVersion 1.0.0
@@ -138,8 +166,19 @@ router.use(middlewares.parseFields);
  *
  * @apiDescription Accessible by access_token, It create a new Application object and return the access_credentials.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} application the user dictionary with all the fields. Email, password and type are mandatory
+ * @apiParam {Object} application the Application dictionary with all the fields. email, password and type are mandatory
+ * @apiParam {String} application.email email Application email valid as username to login
+ * @apiParam {String} application.password password Application password
+ * @apiParam {String} application.type type Application type. for example external, webUi...
+ * @apiParam {String} application.name [name] Application name for example cruiseKiosk,PortWebUI....
+ * @apiParam {String} application.avatar [avatar] Application avatar image id in uploadms
+ * @apiParam {String} application.notes [notes] Application notes
  *
  * @apiParamExample {json} Request-Example:
  * HTTP/1.1 POST request
@@ -306,9 +345,14 @@ router.post('/signup', [jwtMiddle.decodeToken], function (req, res) {
  *
  * @apiDescription Accessible by access_token, It login Application and return the access_credentials.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} username the email
- * @apiParam {String} password the password
+ * @apiParam {String} username the email (BODY param)
+ * @apiParam {String} password the password (BODY param)
  *
  * @apiParamExample {json} Request-Example:
  * HTTP/1.1 POST request
@@ -396,7 +440,11 @@ router.post('/signin', [jwtMiddle.decodeToken], function (req, res) {
  *
  * @apiDescription Accessible by admin access_token, It returns the paginated list of all Applications.
  * To set pagination skip and limit, you can do it in the URL request, for example "get /apps?skip=10&limit=50"
- *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
  *
  * @apiUse Metadata
@@ -533,6 +581,12 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
  *
  * @apiDescription Returns the info about Application. To call this endpoint you must have an admin account or be the Application itself.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
+ * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [as query param || header]
  * @apiSuccess {String} Application.id Application id identifier
  * @apiSuccess {String} Application.field1 field 1 defined in schema
  * @apiSuccess {String} Application.field2 field 2 defined in schema
@@ -586,8 +640,19 @@ router.get('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
  *
  * @apiDescription Accessible by admin access tokens (or you must be the Application itself). Updates the Application object and returns the updated resource.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} application the Application dictionary with all the fields to update. Email (username), password(there is a reset password endpoint) and Application type can be updated only whith admin token
+ * @apiParam {Object} application (BODY Param) the Application dictionary with all the fields to update. Email (username), password(there is a reset password endpoint) and Application type can be updated only whith admin token
+ * @apiParam {String} application.email email Application email valid as username to login
+ * @apiParam {String} application.password password Application password
+ * @apiParam {String} application.type type Application type. for example external, webUi...
+ * @apiParam {String} application.name [name] Application name for example cruiseKiosk,PortWebUI....
+ * @apiParam {String} application.avatar [avatar] Application avatar image id in uploadms
+ * @apiParam {String} application.notes [notes] Application notes
  *
  * @apiParamExample {json} Request-Example:
  * HTTP/1.1 PUT request
@@ -705,8 +770,13 @@ function enableDisable(req, res, value) {
  *
  * @apiDescription Accessible by access_token, It create a reset password Token.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} id the Application id or username(email)
+ * @apiParam {String} id (URL param) the Application id or username(email)
  *
  * @apiSuccess (200 - OK) {String} reset_token Contains grant token to set the new password
  *
@@ -789,8 +859,13 @@ router.post('/:id/actions/resetpassword', [jwtMiddle.decodeToken], function (req
  *
  * @apiDescription Accessible by admin access tokens (or you must be the Application itself). Updates the Application password.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} id the Application id or username (email)
+ * @apiParam {String} id (URL param) the Application id or username (email)
  *
  * @apiSuccess (200 - OK) {Object} access_credentials contains information about access credentials.
  * @apiSuccess (200 - OK) {Object} access_credentials.apiKey  contains information about apiKey
@@ -959,9 +1034,14 @@ router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function (req, 
  *
  * @apiDescription Accessible by admin access tokens. Creates a new userId (email) used to login.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String-URL} id the user id or email
- * @apiParam {String-URL} email the new username (email)
+ * @apiParam {String} id (URL param) the user id or email
+ * @apiParam {String} email (URL param) the new username (email)
  *
  * @apiParamExample {json} Request-Example:
  * HTTP/1.1 GET request
@@ -982,7 +1062,7 @@ router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function (req, 
  * @apiUse BadRequest
  * @apiUse ServerError
  */
-//router.post('/:id/actions/resetpassword', [middlewares.ensureUserAdmin], function(req, res){
+
 router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req, res, next) {
 
     var id = (req.params.id).toString();
@@ -1008,8 +1088,13 @@ router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req,
  *
  * @apiDescription Accessible by admin access tokens. Enables the Application.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} id the Application id
+ * @apiParam {String} id (URL param) the Application id
  *
  * @apiSuccess (200 - OK) {String} status  contains the new Application status
  *
@@ -1037,8 +1122,13 @@ router.post('/:id/actions/enable', [jwtMiddle.decodeToken], function (req, res) 
  *
  * @apiDescription Accessible by admin access tokens. Disables the Application.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} id the Application id
+ * @apiParam {String} id (URL param) the Application id
  *
  * @apiSuccess (200 OK) {String} status  contains the new Application status
  *
@@ -1066,8 +1156,13 @@ router.post('/:id/actions/disable', [jwtMiddle.decodeToken], function (req, res)
  *
  * @apiDescription Accessible by admin access tokens. Deletes the Application and returns the deleted resource.
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} id the Application id
+ * @apiParam {String} id (URL param) the Application id
  *
  * @apiSuccess (204 - NO CONTENT) {String} ApplicationField_1  field 1 defined in Application Schema (e.g. name)
  * @apiSuccess (204 - NO CONTENT) {String} ApplicationField_2  field 2 defined in Application Schema (e.g. notes)
@@ -1136,9 +1231,16 @@ router.delete('/:id', [jwtMiddle.decodeToken], function (req, res) {
  * @apiDescription Accessible by admin access tokens. Returns the paginated list of all Applications matching the search term.
  * To set pagination skip and limit, you can do it in the URL request, for example "get /apps?skip=10&limit=50"
  *
+ * @apiHeader {String} Authorization  Unique access_token. It is not mandatory and can be sent as body or url param
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
  * @apiParam {String} access_token access token that grants access to this resource. It must be sent in [ body || as query param || header]
- * @apiParam {String} skip start pagination
- * @apiParam {String} limit number of elements
+ * @apiParam {String} term (URL Param) search key
+ * @apiParam {String} skip (Query param) start pagination
+ * @apiParam {String} limit (Query Param) number of elements
+ *
  *
  * @apiUse Metadata
  * @apiUse GetResource
