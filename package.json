@@ -39,6 +39,7 @@
     "footer": {
       "title": "Maintained by CRS4",
       "filename": "footer.md"
-    }
+    },
+    "sampleUrl":"http://156.148.36.184:3020"
   }
 }
