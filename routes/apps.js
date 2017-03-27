@@ -213,7 +213,7 @@ router.use(middlewares.parseFields);
  * @apiSuccess (201 - CREATED) {Object} access_credentials.refreshToken  contains information about refreshToken used to renew token
  * @apiSuccess (201 - CREATED) {String} access_credentials.refreshToken.token  user refreshToken
  * @apiSuccess (201 - CREATED) {String} access_credentials.refreshToken.expires  refreshToken expiration date
-
+ *
  * @apiSuccess (201 - CREATED) {Object} Created_resource contains the created User resource
  * @apiSuccess (201 - CREATED) {String} Created_resource.UserField_1 Contains field 1 defined in Application Schema (e.g. name)
  * @apiSuccess (201 - CREATED) {String} Created_resource.UserField_2 Contains field 2 defined in Application Schema (e.g. surname)
@@ -468,6 +468,7 @@ router.post('/signin', [jwtMiddle.decodeToken], function (req, res) {
  * Set pagination skip and limit and other filters in the URL request, e.g. "get /users?skip=10&limit=50&name=Mario"
  * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
  * if set, the same token sent in Authorization header should be undefined
+ * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
