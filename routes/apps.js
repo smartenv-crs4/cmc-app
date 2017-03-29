@@ -136,43 +136,44 @@ router.use(middlewares.parseFields);
  * @apiVersion 1.0.0
  * @apiName Configuration
  * @apiGroup Configuration
- * @apiSampleRequest off
  *
- * @apiDescription This section lists the configuration parameters of the microservice. You can set this parameters by default.json in
- * config directory(in project tree) or by command line thanks to propertiesmanager package.
+ * @apiDescription This section lists the configuration parameters of the microservice. You can set these parameters in default.json in
+ * config directory (under project root), or by command line thanks to the propertiesmanager package.
  *
  * default.json properties can be overridden and extended by command line parameters.
  *
- * To extend it you must type in command line --ParamName=ParamValues like in the example bellow:.
+ * To extend it, you must type in command line --ParamName=ParamValues as in the example below:
  *
- * Override "properties_One" properties from default.json :.
+ * Override "property_1" properties from default.json :
  *
- * $ npm start -- --properties_One="Override_TestOne".
+ * $ npm start -- --property_1="Override_TestOne".
  *
- * The first "--" after npm start must be used to indicate at npm that the next params must be passed to node bin/www, so if you run your
- * application with node bin/www the fist "--" should be not used as bellow:.
+ * The first "--" after npm start command must be used to tell npm that the next parameters must be passed to node bin/www, so if you run your
+ * application with node bin/www the first "--" shall not be used, as in:
  *
  * $node bin/www --properties_One="Override_TestOne".
  *
- * To override parameters in a tree structure(overrun branches to reach leaves), use doted(".") syntax.
+ * To override parameters in a tree data structure as a JSON, you have to access the nested fields by using the dotted (".") syntax.
  *
- * For more example see propertiesmanager npm package.
+ * For further examples see propertiesmanager npm package.
  *
  *
- * @apiParam {Number} dbPort mongoDb Port number
- * @apiParam {String} dbHost mongoDb Host name
+ * @apiParam {Number} dbPort mongoDb port number
+ * @apiParam {String} dbHost mongoDb host name
  * @apiParam {String} dbName mongoDb database name
- * @apiParam {Number} limit  default limit param used to paginate get response
- * @apiParam {Number} skip   default skip param used to paginate get response
+ * @apiParam {Number} limit  default limit param used to paginate GET responses
+ * @apiParam {Number} skip   default skip param used to paginate GET responses
  * @apiParam {String} logfile log file path
  *
- * @apiParam {String} authProtocol protocol used to call authms microservice resource
- * @apiParam {String} authHost authms microservice ip or host name
- * @apiParam {String} authPort port used to call authms microservice resource
- * @apiParam {String} apiGwAuthBaseUrl API gateway base url. Mandatory only if a gateway exist in architecture
- * @apiParam {String} apiVersion auth ms API version
- * @apiParam {String} auth_token token used to call auth ms
+ * @apiParam {String} authProtocol protocol used to call authorization microservice resource
+ * @apiParam {String} authHost authorization microservice IP or host name
+ * @apiParam {String} authPort port used to call a resource from authorization microservice
+ * @apiParam {String} apiGwAuthBaseUrl API gateway base URL. Mandatory only if API calls pass through an API gateway
+ * @apiParam {String} apiVersion authorization microservice API version
+ * @apiParam {String} auth_token token used to call authorization microservice
  * @apiParam {Object} AppSchema Object containig the mongoDb Schema of Applications. If not set, a schema defined in models/apps.js will be used
+ *
+ * @apiSampleRequest off
  */
 //###################################### PROPERTIES FILE DEFAULT.JSON #######################################################
 
@@ -185,39 +186,39 @@ router.use(middlewares.parseFields);
  * @apiName Create Application
  * @apiGroup Application
  *
- * @apiDescription Accessible by access_token, It create a new Application object and return the access_credentials.
+ * @apiDescription Protected by access token, creates a new Application object and returns the access credentials.
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (Body parameter) {Object} application the Application dictionary with all the fields. email, password and type are mandatory
- * @apiParam (Body parameter) {String} application.email email Application email valid as username to login
- * @apiParam (Body parameter) {String} application.password password Application password
- * @apiParam (Body parameter) {String} application.type type Application type. for example external, webUi...
- * @apiParam (Body parameter) {String} [application.name] Application name for example cruiseKiosk,PortWebUI....
- * @apiParam (Body parameter) {String} [application.avatar] Application avatar image  identifier in uploadms
- * @apiParam (Body parameter) {String} [application.notes] Application notes
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (Body parameter) {Object} application          Application dictionary with all the fields. email, password and type are mandatory
+ * @apiParam (Body parameter) {String} application.email    Application email valid as username to login
+ * @apiParam (Body parameter) {String} application.password Application password
+ * @apiParam (Body parameter) {String} application.type     Application type, e.g. external, webUi...
+ * @apiParam (Body parameter) {String} [application.name]   Application name, e.g. cruiseKiosk, PortWebUI...
+ * @apiParam (Body parameter) {String} [application.avatar] Application avatar image identifier in uploadms
+ * @apiParam (Body parameter) {String} [application.notes]  Application notes
  *
  * @apiParamExample {json} Request-Example:
  * HTTP/1.1 POST request
  *  Body:{ "email": "prova@prova.it" , "password":"provami", "type":"ext", "name":"nome"}
  *
- * @apiSuccess (201 - CREATED) {Object} access_credentials contains information about access credentials.
- * @apiSuccess (201 - CREATED) {Object} access_credentials.apiKey  contains information about apiKey
- * @apiSuccess (201 - CREATED) {String} access_credentials.apiKey.token  user Token
- * @apiSuccess (201 - CREATED) {String} access_credentials.apiKey.expires  token expiration date
- * @apiSuccess (201 - CREATED) {Object} access_credentials.refreshToken  contains information about refreshToken used to renew token
- * @apiSuccess (201 - CREATED) {String} access_credentials.refreshToken.token  user refreshToken
- * @apiSuccess (201 - CREATED) {String} access_credentials.refreshToken.expires  refreshToken expiration date
+ * @apiSuccess (201 - CREATED) {Object} access_credentials                      information about access credentials.
+ * @apiSuccess (201 - CREATED) {Object} access_credentials.apiKey               information about apiKey
+ * @apiSuccess (201 - CREATED) {String} access_credentials.apiKey.token         user Token
+ * @apiSuccess (201 - CREATED) {String} access_credentials.apiKey.expires       token expiration date
+ * @apiSuccess (201 - CREATED) {Object} access_credentials.refreshToken         information about refreshToken used to renew token
+ * @apiSuccess (201 - CREATED) {String} access_credentials.refreshToken.token   user refreshToken
+ * @apiSuccess (201 - CREATED) {String} access_credentials.refreshToken.expires refreshToken expiration date
  *
- * @apiSuccess (201 - CREATED) {Object} Created_resource contains the created User resource
- * @apiSuccess (201 - CREATED) {String} Created_resource.UserField_1 Contains field 1 defined in Application Schema (e.g. name)
- * @apiSuccess (201 - CREATED) {String} Created_resource.UserField_2 Contains field 2 defined in Application Schema (e.g. surname)
- * @apiSuccess (201 - CREATED) {String} Created_resource.UserField_N Contains field N defined in Application Schema (e.g. type)
+ * @apiSuccess (201 - CREATED) {Object} Created_resource  the created User resource
+ * @apiSuccess (201 - CREATED) {String} Created_resource.UserField_1  field 1 defined in Application Schema (e.g. name)
+ * @apiSuccess (201 - CREATED) {String} Created_resource.UserField_2  field 2 defined in Application Schema (e.g. surname)
+ * @apiSuccess (201 - CREATED) {String} Created_resource.UserField_N  field N defined in Application Schema (e.g. type)
  *
  * @apiSuccessExample {json} Example: 201 CREATED
  *      HTTP/1.1 201 CREATED
@@ -242,6 +243,8 @@ router.use(middlewares.parseFields);
  * @apiUse Unauthorized
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
+ *
  */
 //router.post('/signup',[middlewares.ensureUserIsAuthAppOrAdmin],function(req, res){
 router.post('/signup', [jwtMiddle.decodeToken], function (req, res) {
@@ -365,30 +368,30 @@ router.post('/signup', [jwtMiddle.decodeToken], function (req, res) {
  * @apiName Login Application
  * @apiGroup Application
  *
- * @apiDescription Accessible by access_token, It login Application and return the access_credentials.
+ * @apiDescription Protected by access token, logins Application and returns the access credentials.
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (Body parameter) {String} username the email
- * @apiParam (Body parameter) {String} password the password
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (Body parameter) {String} username The email
+ * @apiParam (Body parameter) {String} password The password
  *
  * @apiParamExample {json} Request-Example:
  * HTTP/1.1 POST request
  *  Body:{ "username": "prov@prova.it" , "password":"provami"}
  *
- * @apiSuccess (200 - OK) {Object} access_credentials contains information about access credentials.
- * @apiSuccess (200 - OK) {Object} access_credentials.apiKey  contains information about apiKey
- * @apiSuccess (200 - OK) {String} access_credentials.apiKey.token  user Token
- * @apiSuccess (200 - OK) {String} access_credentials.apiKey.expires  token expiration date
- * @apiSuccess (200 - OK) {Object} access_credentials.refreshToken  contains information about refreshToken used to renew token
- * @apiSuccess (200 - OK) {String} access_credentials.refreshToken.token  user refreshToken
+ * @apiSuccess (200 - OK) {Object} access_credentials                       information about access credentials.
+ * @apiSuccess (200 - OK) {Object} access_credentials.apiKey                information about apiKey
+ * @apiSuccess (200 - OK) {String} access_credentials.apiKey.token          user Token
+ * @apiSuccess (200 - OK) {String} access_credentials.apiKey.expires        token expiration date
+ * @apiSuccess (200 - OK) {Object} access_credentials.refreshToken          information about refreshToken used to renew token
+ * @apiSuccess (200 - OK) {String} access_credentials.refreshToken.token    user refreshToken
  * @apiSuccess (200 - OK) {String} access_credentials.refreshToken.expires  refreshToken expiration date
- * @apiSuccess (200 - OK) {String} access_credentials.userId  application _id that identifies it.
+ * @apiSuccess (200 - OK) {String} access_credentials.userId                application id
  *
  *
  * @apiSuccessExample {json} Example: 200 OK
@@ -412,6 +415,7 @@ router.post('/signup', [jwtMiddle.decodeToken], function (req, res) {
  * @apiUse BadRequest
  * @apiUse ServerError
  * @apiUse InvalidUserAndPassword
+ * @apiSampleRequest off
  */
 router.post('/signin', [jwtMiddle.decodeToken], function (req, res) {
 
@@ -464,21 +468,21 @@ router.post('/signin', [jwtMiddle.decodeToken], function (req, res) {
  * @apiName Get Applications
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin access_token, It returns the paginated list of all Applications.
+ * @apiDescription Protected by admin access token, returns the paginated list of all Applications.
  * Set pagination skip and limit and other filters in the URL request, e.g. "get /users?skip=10&limit=50&name=Mario"
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same token sent in Authorization header should be undefined
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (Query Parameter) {String} ApplicationField_1 query field 1 used to set filter, e.g. name = "App Name"
- * @apiParam (Query Parameter) {String} ApplicationField_2 query field 2 used to set filter, e.g. Filed2 = "Field Value"
- * @apiParam (Query Parameter) {String} ApplicationField_etc query field ... used to set filter, e.g. Filed.. = "Field Value"
- * @apiParam (Query Parameter) {String} ApplicationField_N query field N used to set filter, e.g. Field3 = "Field Value"
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (Query Parameter) {String} ApplicationField_1 query    field 1 used to set filter, e.g. name = "App Name"
+ * @apiParam (Query Parameter) {String} ApplicationField_2 query    field 2 used to set filter, e.g. Filed2 = "Field Value"
+ * @apiParam (Query Parameter) {String} ApplicationField_etc query  field ... used to set filter, e.g. Filed.. = "Field Value"
+ * @apiParam (Query Parameter) {String} ApplicationField_N query    field N used to set filter, e.g. Field3 = "Field Value"
  *
  * @apiUse Metadata
  * @apiUse GetResource
@@ -607,7 +611,7 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
 
 
 /**
- * @api {get} /apps/:id Get the Application by id
+ * @api {get} /apps/:id Get Application by id
  * @apiVersion 1.0.0
  * @apiName GetApplication
  * @apiGroup Application
@@ -619,14 +623,14 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (URL Parameter) {String} id the user id or username (email)
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same  token sent in Authorization header should be undefined
+ * @apiParam (URL Parameter) {String} id The user id or username (email)
  *
- * @apiSuccess {String} id Application id identifier
- * @apiSuccess {String} field1 field 1 defined in schema
- * @apiSuccess {String} field2 field 2 defined in schema
- * @apiSuccess {String} fieldN field N defined in schema
+ * @apiSuccess {String} id      Application id
+ * @apiSuccess {String} field1  field 1 defined in schema
+ * @apiSuccess {String} field2  field 2 defined in schema
+ * @apiSuccess {String} fieldN  field N defined in schema
  *
  * @apiSuccessExample {json} Example: 200 OK, Success Response
  *     {
@@ -674,22 +678,22 @@ router.get('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
  * @apiName Update Application
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin access tokens (or you must be the Application itself). Updates the Application object and returns the updated resource.
+ * @apiDescription Protected by admin access token (or you must be the Application itself). Updates the Application object and returns the updated resource.
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (Body Parameter) {Object} application the application dictionary with all the fields to update. Email (username) field can be updated only by admin token; To change password and enable application, there is a dedicated endpoint
-  * @apiParam (Body Parameter) {String} application.email email Application email valid as username to login
- * @apiParam (Body Parameter) {String} application.password password Application password
- * @apiParam (Body Parameter) {String} application.type type Application type. for example external, webUi...
- * @apiParam (Body Parameter) {String} application.name [name] Application name for example cruiseKiosk,PortWebUI....
- * @apiParam (Body Parameter) {String} application.avatar [avatar] Application avatar image id in uploadms
- * @apiParam (Body Parameter) {String} application.notes [notes] Application notes
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (Body Parameter) {Object} application                      Application dictionary with all the fields to update. Email (username) field can be updated only by admin token; To change password and enable application, there is a dedicated endpoint
+ * @apiParam (Body Parameter) {String} application.email email          Application email valid as username to login
+ * @apiParam (Body Parameter) {String} application.password password    Application password
+ * @apiParam (Body Parameter) {String} application.type type            Application type, e.g. external, webUi...
+ * @apiParam (Body Parameter) {String} application.name [name]          Application name, e.g. cruiseKiosk, PortWebUI...
+ * @apiParam (Body Parameter) {String} application.avatar [avatar]      Application avatar image id in uploadms
+ * @apiParam (Body Parameter) {String} application.notes [notes]        Application notes
  *
  * @apiParamExample {json} Request-Example:
  * HTTP/1.1 PUT request
@@ -710,6 +714,7 @@ router.get('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
  * @apiUse NotFound
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
  */
 router.put('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf], function (req, res) {
 
@@ -805,18 +810,18 @@ function enableDisable(req, res, value) {
  * @apiName ResetPassword
  * @apiGroup Application
  *
- * @apiDescription Accessible by access_token, It create a reset password Token.
+ * @apiDescription Protected by access token, creates a reset password Token.
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (URL Parameter) {String} id the Application id or username(email)
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL Parameter) {String} id The Application id or username(email)
  *
- * @apiSuccess (200 - OK) {String} reset_token Contains token to set the new password
+ * @apiSuccess (200 - OK) {String} reset_token  token to set the new password
  *
  * @apiSuccessExample {json} Example: 200 OK
  *      HTTP/1.1 200 OK
@@ -828,6 +833,7 @@ function enableDisable(req, res, value) {
  * @apiUse NotFound
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
  */
 router.post('/:id/actions/resetpassword', [jwtMiddle.decodeToken], function (req, res) {
 
@@ -895,7 +901,7 @@ router.post('/:id/actions/resetpassword', [jwtMiddle.decodeToken], function (req
  * @apiName SetPassword
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin access tokens (or you must be the Application itself). Updates the Application password.
+ * @apiDescription Protected by admin access token (or you must be the Application itself). Updates the Application password.
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
@@ -903,20 +909,20 @@ router.post('/:id/actions/resetpassword', [jwtMiddle.decodeToken], function (req
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
  * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (URL parameter) {String} id the Application id or username (email)
- * @apiParam (Body parameter) {String} oldpassword the old password to update. If set, reset_token must be undefined
- * @apiParam (Body parameter) {String} newpassword the new password
- * @apiParam (Body parameter) {String} reset_token this token is used to update password. If set, oldpassword must be undefined
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL parameter) {String} id            Application id or username (email)
+ * @apiParam (Body parameter) {String} oldpassword  Old password to update. If set, reset_token must be undefined
+ * @apiParam (Body parameter) {String} newpassword  New password
+ * @apiParam (Body parameter) {String} reset_token  Token is used to update password. If set, oldpassword must be undefined
  *
- * @apiSuccess (200 - OK) {Object} access_credentials contains information about access credentials.
- * @apiSuccess (200 - OK) {Object} access_credentials.apiKey  contains information about apiKey
- * @apiSuccess (200 - OK) {String} access_credentials.apiKey.token  user Token
- * @apiSuccess (200 - OK) {String} access_credentials.apiKey.expires  token expiration date
- * @apiSuccess (200 - OK) {Object} access_credentials.refreshToken  contains information about refreshToken used to renew token
- * @apiSuccess (200 - OK) {String} access_credentials.refreshToken.token  user refreshToken
+ * @apiSuccess (200 - OK) {Object} access_credentials                       information about access credentials.
+ * @apiSuccess (200 - OK) {Object} access_credentials.apiKey                information about apiKey
+ * @apiSuccess (200 - OK) {String} access_credentials.apiKey.token          user Token
+ * @apiSuccess (200 - OK) {String} access_credentials.apiKey.expires        token expiration date
+ * @apiSuccess (200 - OK) {Object} access_credentials.refreshToken          information about refreshToken used to renew token
+ * @apiSuccess (200 - OK) {String} access_credentials.refreshToken.token    user refreshToken
  * @apiSuccess (200 - OK) {String} access_credentials.refreshToken.expires  refreshToken expiration date
- * @apiSuccess (200 - OK) {String} access_credentials.userId  application _id that identifies it.
+ * @apiSuccess (200 - OK) {String} access_credentials.userId                application id
  *
  *
  * @apiSuccessExample {json} Example: 200 OK
@@ -939,6 +945,7 @@ router.post('/:id/actions/resetpassword', [jwtMiddle.decodeToken], function (req
  * @apiUse NotFound
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
  */
 router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function (req, res) {
 
@@ -1076,23 +1083,23 @@ router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function (req, 
  * @apiName ChangeUserId
  * @apiGroup Application
  *
- * @apiDescription Accessible only by admin access tokens it update a application username(email).
+ * @apiDescription Protected by admin access token, updates an application username (email).
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (URL parameter) {String} id the application id or email
- * @apiParam (Body parameter) {String} email the new application username (email)
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL parameter) {String} id        Application id or email
+ * @apiParam (Body parameter) {String} email    New application username (email)
  *
  * @apiParamExample {json} Request-Example:
  * HTTP/1.1 GET request
  *  Body:{ "email": "prov@prova.it"}
  *
- * @apiSuccess (200- OK) {Object} application dictionary with new updated username(email)
+ * @apiSuccess (200- OK) {Object} application dictionary with new updated username (email)
  *
  * @apiSuccessExample {json} Example: 200 OK
  *      HTTP/1.1 200 OK
@@ -1106,8 +1113,8 @@ router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function (req, 
  * @apiUse NotFound
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
  */
-
 router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req, res, next) {
 
     var id = (req.params.id).toString();
@@ -1131,23 +1138,23 @@ router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req,
 
 
 /**
- * @api {post} /apps/:id/actions/enable enable Application
+ * @api {post} /apps/:id/actions/enable Enable Application
  * @apiVersion 1.0.0
  * @apiName EnableApplication
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin access tokens. Enable the Application.
+ * @apiDescription Protected by admin access token, enables an Application.
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (URL parameter) {String} id the Application id
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL parameter) {String} id The Application id
  *
- * @apiSuccess (200 - OK) {Object} status contains the new Application status
+ * @apiSuccess (200 - OK) {Object} status  The new Application status
  *
  * @apiSuccessExample {json} Example: 200 OK
  *      HTTP/1.1 200 OK
@@ -1159,6 +1166,7 @@ router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req,
  * @apiUse NotFound
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
  */
 router.post('/:id/actions/enable', [jwtMiddle.decodeToken], function (req, res) {
     enableDisable(req, res, true);
@@ -1166,21 +1174,21 @@ router.post('/:id/actions/enable', [jwtMiddle.decodeToken], function (req, res) 
 
 
 /**
- * @api {post} /apps/:id/actions/disable disable Application
+ * @api {post} /apps/:id/actions/disable Disable Application
  * @apiVersion 1.0.0
  * @apiName DisableApplication
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin access tokens. Disable the Application.
+ * @apiDescription Protected by admin access token, disables an Application.
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (URL parameter) {String} id the Application id
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL parameter) {String} id The Application id
  *
 
  * @apiSuccess (200 - OK) {Object} status contains the new Application status
@@ -1195,6 +1203,7 @@ router.post('/:id/actions/enable', [jwtMiddle.decodeToken], function (req, res) 
  * @apiUse NotFound
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
  */
 router.post('/:id/actions/disable', [jwtMiddle.decodeToken], function (req, res) {
     enableDisable(req, res, false);
@@ -1202,21 +1211,21 @@ router.post('/:id/actions/disable', [jwtMiddle.decodeToken], function (req, res)
 
 
 /**
- * @api {delete} /apps/:id delete Application
+ * @api {delete} /apps/:id Delete Application
  * @apiVersion 1.0.0
  * @apiName Delete Application
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin access tokens. Deletes the Application and returns the deleted resource.
+ * @apiDescription Protected by admin access token, deletes an Application and returns the deleted resource.
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (URL parameter) {String} id the Application id
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL parameter) {String} id The Application id
  *
  * @apiSuccess (204 - NO CONTENT) {String} ApplicationField_1  field 1 defined in Application Schema (e.g. name)
  * @apiSuccess (204 - NO CONTENT) {String} ApplicationField_2  field 2 defined in Application Schema (e.g. notes)
@@ -1233,6 +1242,7 @@ router.post('/:id/actions/disable', [jwtMiddle.decodeToken], function (req, res)
  * @apiUse NotFound
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
  */
 router.delete('/:id', [jwtMiddle.decodeToken], function (req, res) {
 
@@ -1277,24 +1287,24 @@ router.delete('/:id', [jwtMiddle.decodeToken], function (req, res) {
 });
 
 /**
- * @api {get} /apps/actions/email/find/:term Search all Application
+ * @api {get} /apps/actions/email/find/:term Search all Applications
  * @apiVersion 1.0.0
- * @apiName SEARCH Application
+ * @apiName Search Application
  * @apiGroup Application
  *
- * @apiDescription Accessible by admin access tokens, returns the paginated list of all Applications matching the search term.
- * To set pagination skip and limit, you can do it in the URL request, for example "get /apps?skip=10&limit=50"
+ * @apiDescription Protected by admin access token, returns the paginated list of all Applications matching the search term.
+ * To set pagination skip and limit, you can do it in the URL request, e.g. "get /apps?skip=10&limit=50"
  *
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
  *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
  *     }
- * @apiParam {String} [access_token] access token that grants access to this resource. It must be sent in [ body || as query param ].
- * if set, the same  token sent in Authorization header should be undefined
- * @apiParam (URL parameter) {String} term search key
- * @apiParam (Query parameter) {String} skip start pagination
- * @apiParam (Query parameter) {String} limit number of elements
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL parameter) {String} term      Query string
+ * @apiParam (Query parameter) {String} skip    Pagination start
+ * @apiParam (Query parameter) {String} limit   Number of elements
  *
  *
  * @apiUse Metadata
@@ -1304,6 +1314,7 @@ router.delete('/:id', [jwtMiddle.decodeToken], function (req, res) {
  * @apiUse NotFound
  * @apiUse BadRequest
  * @apiUse ServerError
+ * @apiSampleRequest off
  */
 router.get('actions/email/find/:term', jwtMiddle.decodeToken, function (req, res) {
 

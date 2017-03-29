@@ -1,10 +1,10 @@
-For more info about the project, please visit the [CagliariPortt2020 official website](http://cp2020.crs4.it)
+For more info about the project, please visit the [Cagliari Port 2020 official website](http://cp2020.crs4.it)
 
 Security & Authentication
 -------------------------
 All API endpoints use **HTTPS** protocol.
 
-All API endpoints **MUST require authentication**.
+All API endpoints **require authentication**.
 
 
 
