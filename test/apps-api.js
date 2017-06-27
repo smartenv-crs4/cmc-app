@@ -5,55 +5,41 @@ var async = require('async');
 var db = require("../models/db");
 var Apps = require('../models/apps').App;
 var conf = require('../config').conf;
-
 var request = require('request');
-
 var app = require('../app');
 var util = require('util');
-
-
 var Port = 3020;
-var APIURL = 'http://localhost:' + Port +"/apps" ;
-
-
-
-
+var APIURL = 'http://localhost:' + Port + "/apps";
 var adminToken;
 var clientApp;
 var clientId;
-var UserMSURL = conf.userProtocol + "://" + conf.userHost + ":" + conf.userPort + "/users";
-var commonFunctioTest=require("./testCommonfunctions");
-
-
-
+var UserMSURL = conf.userUrl + "/users";
+var commonFunctioTest = require("./testCommonfunctions");
 var appStandard = conf.testConfig.appTypeTest;
 
 
 describe('Apps API', function () {
 
     before(function (done) {
-        //this.timeout(4000);
-        //
-        //console.log("BEFORE");
 
-
-        commonFunctioTest.setAuthMsMicroservice(function(err){
-           if(err) throw (err);
+        commonFunctioTest.setAuthMsMicroservice(function (err) {
+            if (err) throw (err);
             var url = UserMSURL + '/signin';
-
-            console.log("!!!!!!!!!!" + url);
             request.post({
                 url: url,
                 body: JSON.stringify(conf.testConfig.adminLogin),
-                headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.testConfig.myWebUITokenToSignUP}
-            }, function (error, response,body) {
-                if (error) console.log("######  2 ERRORE should  login a Authapp: " + error +"  ######");
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': "Bearer " + conf.testConfig.myWebUITokenToSignUP
+                }
+            }, function (error, response, body) {
+                if (error) console.log("######  2 ERROR should  login a Authapp: " + error + "  ######");
                 else {
                     console.log("GET ADMIN TOKEN " + body);
                     response.statusCode.should.be.equal(200);
                     var results = JSON.parse(response.body);
                     results.should.have.property('access_credentials');
-                    adminToken=results.access_credentials.apiKey.token;
+                    adminToken = results.access_credentials.apiKey.token;
                     console.log("ADMINTOKEN " + adminToken);
                 }
                 done();
@@ -65,9 +51,9 @@ describe('Apps API', function () {
     after(function (done) {
         //console.log("AFTER");
         Apps.remove({}, function (err, elm) {
-            if (err) console.log("######   ERRORE After 1: " + err +"  ######");
-            commonFunctioTest.resetAuthMsStatus(function(err){
-                if (err) console.log("######   ERRORE After 1: " + err +"  ######");
+            if (err) console.log("######   ERROR After 1: " + err + "  ######");
+            commonFunctioTest.resetAuthMsStatus(function (err) {
+                if (err) console.log("######   ERROR After 1: " + err + "  ######");
                 done();
             });
         });
@@ -79,18 +65,18 @@ describe('Apps API', function () {
         var range = _.range(100);
 
         //Add cars
-       // console.log("BEFORE EACH");
+        // console.log("BEFORE EACH");
         async.each(range, function (e, cb) {
 
             Apps.create({
-                _id : new mongoose.Types.ObjectId,
-                email:"email" + e + "@email.it",
-                name:"name" +e,
-                avatar:"avatar"+e
+                _id: new mongoose.Types.ObjectId,
+                email: "email" + e + "@email.it",
+                name: "name" + e,
+                avatar: "avatar" + e
             }, function (err, newapp) {
-                if (err) console.log("######   ERRORE BEFOREEACH: " + err +"  ######");
+                if (err) console.log("######   ERROR BEFOREEACH: " + err + "  ######");
                 //console.log(e);
-                if(e==1) clientApp=newapp._id;
+                if (e == 1) clientApp = newapp._id;
                 cb();
             });
 
@@ -103,29 +89,26 @@ describe('Apps API', function () {
     afterEach(function (done) {
         //console.log("AFTER EACH");
         Apps.remove({}, function (err, elm) {
-            if (err) console.log("######   ERRORE AfterEach: " + err +"  ######");
-            if(clientId)
-                deleteFromAuth(clientId,done);
+            if (err) console.log("######   ERROR AfterEach: " + err + "  ######");
+            if (clientId)
+                deleteFromAuth(clientId, done);
             else done();
         });
     });
-
-
-
 
 
     describe('GET /app', function () {
 
         it('must return ONE app and _metadata, all fields', function (done) {
 
-           // console.log("SEND TEST");
+            // console.log("SEND TEST");
 
             request.get({
                 url: APIURL + '?skip=0&limit=1',
                 headers: {'Authorization': "Bearer " + adminToken}
             }, function (error, response, body) {
 
-                if (error) console.log("######   ERRORE: " + error +"  ######");
+                if (error) console.log("######   ERROR: " + error + "  ######");
                 else {
                     //console.log("ERR MSG:" + body);
                     response.statusCode.should.be.equal(200);
@@ -160,7 +143,7 @@ describe('Apps API', function () {
                 headers: {'Authorization': "Bearer " + adminToken}
             }, function (error, response, body) {
 
-                if (error) console.log("######   ERRORE: " + error +"  ######");
+                if (error) console.log("######   ERROR: " + error + "  ######");
                 else {
                     //console.log("ERR MSG:" + body);
                     response.statusCode.should.be.equal(200);
@@ -183,7 +166,6 @@ describe('Apps API', function () {
     });
 
 
-
     describe('GET /authapp', function () {
 
         it('must return  error 400 for invalid token', function (done) {
@@ -193,7 +175,7 @@ describe('Apps API', function () {
                 headers: {'Authorization': "Bearer " + conf.testConfig.myWebUITokenToSignUP + "d"}
             }, function (error, response, body) {
 
-                if (error) console.log("######   ERRORE: " + error +"  ######");
+                if (error) console.log("######   ERROR: " + error + "  ######");
                 else {
                     var results = JSON.parse(body);
                     response.statusCode.should.be.equal(401);
@@ -215,7 +197,7 @@ describe('Apps API', function () {
                 headers: {'Authorization': "Bearer " + conf.testConfig.myWebUITokenToSignUP}
             }, function (error, response, body) {
 
-                if (error) console.log("######   ERRORE: " + error +"  ######");
+                if (error) console.log("######   ERROR: " + error + "  ######");
                 else {
                     var results = JSON.parse(body);
                     response.statusCode.should.be.equal(401);
@@ -228,11 +210,6 @@ describe('Apps API', function () {
     });
 
 
-
-
-
-
-
     describe('GET /authapp', function () {
 
         it('must return  no error for invalid field', function (done) {
@@ -242,7 +219,7 @@ describe('Apps API', function () {
                 headers: {'Authorization': "Bearer " + adminToken}
             }, function (error, response, body) {
 
-                if (error) console.log("######   ERRORE: " + error +"  ######");
+                if (error) console.log("######   ERROR: " + error + "  ######");
                 else {
                     //console.log("EREWREWREWRWEREW " +body);
                     response.statusCode.should.be.equal(200);
@@ -260,16 +237,13 @@ describe('Apps API', function () {
     });
 
 
-
-
-
     describe('GET /authapp', function () {
 
         it('must return  error 400 for Access_token required', function (done) {
 
             request.get({url: APIURL + '?skip=0&limit=2'}, function (error, response, body) {
 
-                if (error) console.log("######   ERRORE: " + error +"  ######");
+                if (error) console.log("######   ERROR: " + error + "  ######");
                 else {
                     var results = JSON.parse(body);
                     //console.log("ERRMSG" + results.error_message)
@@ -283,59 +257,64 @@ describe('Apps API', function () {
     });
 
 
-    function deleteFromAuth(id,done){
-        var gw=_.isEmpty(conf.apiGwAuthBaseUrl) ? "" : conf.apiGwAuthBaseUrl;
-        gw=_.isEmpty(conf.apiVersion) ? gw : gw + "/" + conf.apiVersion;
-        var url = conf.authProtocol + "://" + conf.authHost + ":" + conf.authPort + gw + '/authapp/'+id;
-        clientId=null;
+    function deleteFromAuth(id, done) {
+        var gw = _.isEmpty(conf.apiGwAuthBaseUrl) ? "" : conf.apiGwAuthBaseUrl;
+        gw = _.isEmpty(conf.apiVersion) ? gw : gw + "/" + conf.apiVersion;
+        var url = conf.authUrl;
+        clientId = null;
         request.delete({
             url: url,
             headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token}
-        },function(error, response, body){
-            if(error) {
-                console.log("######   ERRORE: " + error + "  ######");
+        }, function (error, response, body) {
+            if (error) {
+                console.log("######   ERROR: " + error + "  ######");
                 done();
             }
-            else{
-                should(response.statusCode==200 || response.statusCode==404).be.true;
+            else {
+                should(response.statusCode == 200 || response.statusCode == 404).be.true;
                 done();
             }
         });
     }
 
-    function createUser(callb){
-        var appBody = JSON.stringify({application:appStandard});
+    function createUser(callb) {
+        var appBody = JSON.stringify({application: appStandard});
         //console.log("BODY " + userBody);
         var url = APIURL + '/signup';
         request.post({
             url: url,
             body: appBody,
-            headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.testConfig.myWebUITokenToSignUP}
-        }, function (error, response,body) {
-            if (error) console.log("######  1 ERRORE should  login a Authapp: " + error +"  ######");
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': "Bearer " + conf.testConfig.myWebUITokenToSignUP
+            }
+        }, function (error, response, body) {
+            if (error) console.log("######  1 ERROR should  login a Authapp: " + error + "  ######");
             else {
                 console.log(body);
                 response.statusCode.should.be.equal(201);
                 var results = JSON.parse(response.body);
                 results.should.have.property('access_credentials');
                 results.should.have.property('created_resource');
-                clientId=results.created_resource._id; // nedeed to cancel app
+                clientId = results.created_resource._id; // nedeed to cancel app
             }
             callb(results.access_credentials.apiKey.token || null);
         });
     }
 
 
-    
-    describe('GET /authapp/:id', function(){
-    
-        it('must return a app by id, all fields', function(done){
-            createUser(function(token){
-                if(token){
-                    var url = APIURL+'/'+clientId;
-                    request.get({url:url,headers:{'Authorization' : "Bearer "+ token}},function(error, response, body){
-                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                        else{
+    describe('GET /authapp/:id', function () {
+
+        it('must return a app by id, all fields', function (done) {
+            createUser(function (token) {
+                if (token) {
+                    var url = APIURL + '/' + clientId;
+                    request.get({
+                        url: url,
+                        headers: {'Authorization': "Bearer " + token}
+                    }, function (error, response, body) {
+                        if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                        else {
                             console.log(body);
                             response.statusCode.should.be.equal(200);
                             var results = JSON.parse(response.body);
@@ -345,7 +324,7 @@ describe('Apps API', function () {
                         }
                         done();
                     });
-                }else{
+                } else {
                     token.should.be.not(null);
                 }
             })
@@ -354,15 +333,18 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp/:id', function(){
+    describe('GET /authapp/:id', function () {
 
-        it('must return a app by id, fields type', function(done){
-            createUser(function(token){
-                if(token){
-                    var url = APIURL+'/'+clientId+"?fields=name";
-                    request.get({url:url,headers:{'Authorization' : "Bearer "+ token}},function(error, response, body){
-                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                        else{
+        it('must return a app by id, fields type', function (done) {
+            createUser(function (token) {
+                if (token) {
+                    var url = APIURL + '/' + clientId + "?fields=name";
+                    request.get({
+                        url: url,
+                        headers: {'Authorization': "Bearer " + token}
+                    }, function (error, response, body) {
+                        if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                        else {
                             response.statusCode.should.be.equal(200);
                             var results = JSON.parse(response.body);
                             results.should.not.have.property('email');
@@ -372,7 +354,7 @@ describe('Apps API', function () {
                         }
                         done();
                     });
-                }else{
+                } else {
                     token.should.be.not(null);
                 }
             })
@@ -380,15 +362,18 @@ describe('Apps API', function () {
         });
     });
 
-    describe('GET /authapp/:id', function(){
+    describe('GET /authapp/:id', function () {
 
-        it('must return a app by id, send an invalid field', function(done){
-            createUser(function(token){
-                if(token){
-                    var url = APIURL+'/'+clientId+"?fields=name,codfiscale";
-                    request.get({url:url,headers:{'Authorization' : "Bearer "+ token}},function(error, response, body){
-                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                        else{
+        it('must return a app by id, send an invalid field', function (done) {
+            createUser(function (token) {
+                if (token) {
+                    var url = APIURL + '/' + clientId + "?fields=name,codfiscale";
+                    request.get({
+                        url: url,
+                        headers: {'Authorization': "Bearer " + token}
+                    }, function (error, response, body) {
+                        if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                        else {
                             response.statusCode.should.be.equal(200);
                             var results = JSON.parse(response.body);
                             results.should.not.have.property('email');
@@ -399,7 +384,7 @@ describe('Apps API', function () {
                         }
                         done();
                     });
-                }else{
+                } else {
                     token.should.be.not(null);
                 }
             })
@@ -408,24 +393,24 @@ describe('Apps API', function () {
     });
 
 
+    describe('GET /authapp/:id', function () {
 
-
-
-    describe('GET /authapp/:id', function(){
-
-        it('must return a 404, app not found', function(done){
-            createUser(function(token){
-                if(token){
-                    var url = APIURL+'/'+clientId+"abc?fields=name,codfiscale";
-                    request.get({url:url,headers:{'Authorization' : "Bearer "+ adminToken}},function(error, response, body){
-                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                        else{
+        it('must return a 404, app not found', function (done) {
+            createUser(function (token) {
+                if (token) {
+                    var url = APIURL + '/' + clientId + "abc?fields=name,codfiscale";
+                    request.get({
+                        url: url,
+                        headers: {'Authorization': "Bearer " + adminToken}
+                    }, function (error, response, body) {
+                        if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                        else {
                             console.log("404ERR " + body);
                             response.statusCode.should.be.equal(404);
                         }
                         done();
                     });
-                }else{
+                } else {
                     token.should.be.not(null);
                 }
             })
@@ -434,22 +419,24 @@ describe('Apps API', function () {
     });
 
 
+    describe('GET /authapp/:id', function () {
 
-    describe('GET /authapp/:id', function(){
-
-        it('must return a 401, app with invalid ID', function(done){
-            createUser(function(token){
-                if(token){
-                    var url = APIURL+'/'+clientId+"abc?fields=name,codfiscale";
-                    request.get({url:url,headers:{'Authorization' : "Bearer "+ token}},function(error, response, body){
-                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                        else{
+        it('must return a 401, app with invalid ID', function (done) {
+            createUser(function (token) {
+                if (token) {
+                    var url = APIURL + '/' + clientId + "abc?fields=name,codfiscale";
+                    request.get({
+                        url: url,
+                        headers: {'Authorization': "Bearer " + token}
+                    }, function (error, response, body) {
+                        if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                        else {
                             console.log("404ERR " + body);
                             response.statusCode.should.be.equal(401);
                         }
                         done();
                     });
-                }else{
+                } else {
                     token.should.be.not(null);
                 }
             })
@@ -458,30 +445,31 @@ describe('Apps API', function () {
     });
 
 
+    describe('DELETE /app/:id', function () {
 
-
-    describe('DELETE /app/:id', function(){
-
-        it('must delete a app by id', function(done){
-            createUser(function(token){
-                if(token){
-                    var url = APIURL+'/'+clientId;
-                    request.delete({url:url,headers:{'Authorization' : "Bearer "+ adminToken}},function(error, response, body){
-                        if(error) {
-                            console.log("######   ERRORE: " + error + "  ######");
+        it('must delete a app by id', function (done) {
+            createUser(function (token) {
+                if (token) {
+                    var url = APIURL + '/' + clientId;
+                    request.delete({
+                        url: url,
+                        headers: {'Authorization': "Bearer " + adminToken}
+                    }, function (error, response, body) {
+                        if (error) {
+                            console.log("######   ERROR: " + error + "  ######");
                             done()
                         }
-                        else{
+                        else {
                             console.log("404ERR " + body);
                             response.statusCode.should.be.equal(204);
-                            Apps.findOne({id:clientId}, function(err, usr){
+                            Apps.findOne({id: clientId}, function (err, usr) {
 
                                 should(usr).be.equal(null);
                                 done();
                             });
                         }
                     });
-                }else{
+                } else {
                     token.should.be.not(null);
                 }
             })
@@ -490,24 +478,27 @@ describe('Apps API', function () {
     });
 
 
-    describe('DELETE /app/:id', function(){
+    describe('DELETE /app/:id', function () {
 
-        it('must return error 404 in delete a app by invalid id', function(done){
-            createUser(function(token){
-                if(token){
-                    var url = APIURL+'/'+"ABC";
-                    request.delete({url:url,headers:{'Authorization' : "Bearer "+ adminToken}},function(error, response, body){
-                        if(error) {
-                            console.log("######   ERRORE: " + error + "  ######");
+        it('must return error 404 in delete a app by invalid id', function (done) {
+            createUser(function (token) {
+                if (token) {
+                    var url = APIURL + '/' + "ABC";
+                    request.delete({
+                        url: url,
+                        headers: {'Authorization': "Bearer " + adminToken}
+                    }, function (error, response, body) {
+                        if (error) {
+                            console.log("######   ERROR: " + error + "  ######");
                             done()
                         }
-                        else{
+                        else {
                             console.log("404ERR " + body);
                             response.statusCode.should.be.equal(500);
                             done();
                         }
                     });
-                }else{
+                } else {
                     token.should.be.not(null);
                 }
             })
@@ -516,20 +507,18 @@ describe('Apps API', function () {
     });
 
 
+    describe('GET /authapp/:id', function () {
 
-
-
-
-
-    describe('GET /authapp/:id', function(){
-
-        it('must disable and enable a App', function(done){
-            createUser(function(tokenUtente){
-                if(tokenUtente){
-                    var url = APIURL+'/'+clientId+"/actions/disable";
-                    request.post({url:url,headers:{'Authorization' : "Bearer "+ adminToken}},function(error, response, body){
-                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                        else{
+        it('must disable and enable a App', function (done) {
+            createUser(function (tokenUtente) {
+                if (tokenUtente) {
+                    var url = APIURL + '/' + clientId + "/actions/disable";
+                    request.post({
+                        url: url,
+                        headers: {'Authorization': "Bearer " + adminToken}
+                    }, function (error, response, body) {
+                        if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                        else {
                             response.statusCode.should.be.equal(201);
                             console.log("#####AFTERDISAVBLE##### " + body);
 
@@ -543,26 +532,38 @@ describe('Apps API', function () {
                             request.post({
                                 url: url,
                                 body: appBody,
-                                headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.testConfig.myWebUITokenToSignUP}
-                            }, function (error, response,body) {
-                                if (error) console.log("######  2 ERRORE should  login a Authapp: " + error +"  ######");
+                                headers: {
+                                    'content-type': 'application/json',
+                                    'Authorization': "Bearer " + conf.testConfig.myWebUITokenToSignUP
+                                }
+                            }, function (error, response, body) {
+                                if (error) console.log("######  2 ERROR should  login a Authapp: " + error + "  ######");
                                 else {
 
                                     response.statusCode.should.be.equal(200);
-                                    var url = APIURL+'/'+clientId+"?fields=name";
-                                    request.get({url:url,headers:{'Authorization' : "Bearer "+ tokenUtente}},function(error, response, body){
-                                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                                        else{
+                                    var url = APIURL + '/' + clientId + "?fields=name";
+                                    request.get({
+                                        url: url,
+                                        headers: {'Authorization': "Bearer " + tokenUtente}
+                                    }, function (error, response, body) {
+                                        if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                                        else {
                                             response.statusCode.should.be.equal(401);
-                                            var url = APIURL+'/'+clientId+"/actions/enable";
-                                            request.post({url:url,headers:{'Authorization' : "Bearer "+ adminToken}},function(error, response, body){
-                                                if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                                                else{
+                                            var url = APIURL + '/' + clientId + "/actions/enable";
+                                            request.post({
+                                                url: url,
+                                                headers: {'Authorization': "Bearer " + adminToken}
+                                            }, function (error, response, body) {
+                                                if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                                                else {
                                                     response.statusCode.should.be.equal(201);
-                                                    var url = APIURL+'/'+clientId+"?fields=name";
-                                                    request.get({url:url,headers:{'Authorization' : "Bearer "+ tokenUtente}},function(error, response, body){
-                                                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
-                                                        else{
+                                                    var url = APIURL + '/' + clientId + "?fields=name";
+                                                    request.get({
+                                                        url: url,
+                                                        headers: {'Authorization': "Bearer " + tokenUtente}
+                                                    }, function (error, response, body) {
+                                                        if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
+                                                        else {
                                                             response.statusCode.should.be.equal(200);
                                                             var results = JSON.parse(response.body);
                                                             results.should.not.have.property('email');
@@ -580,7 +581,7 @@ describe('Apps API', function () {
                             });
                         }
                     });
-                }else{
+                } else {
                     tokenUtente.should.be.not(null);
                 }
             })

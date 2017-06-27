@@ -8,13 +8,8 @@
     "skip":0,
     "logfile":"/var/log/caport2020User-Microservice.log",
     "authProtocol":"http",
-    "authHost":"your_auth_service_host",
-    "authPort":"3000",
-    "apiGwAuthBaseUrl":"",
-    "apiVersion":"",
-    "userProtocol":"http",
-    "userHost":"your_user_service_host",
-    "userPort":"3001",
+    "authUrl":"your_auth_service_url",
+    "userUrl":"your_user_service_url",
     "auth_token":"your_auth_service_token",
     "testConfig":{
       "apptokens":["AppTest1"],
@@ -30,11 +25,7 @@
     "limit":50,
     "skip":0,
     "logfile":"/var/log/caport2020User-Microservice.log",
-    "authProtocol":"http",
-    "authHost":"your_auth_service_host",
-    "authPort":"3000",
-    "apiGwAuthBaseUrl":"",
-    "apiVersion":"",
+    "authUrl":"your_auth_service_url",
     "auth_token":"your_auth_service_token"
   }
  }

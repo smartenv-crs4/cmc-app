@@ -1,5 +1,5 @@
 {
-  "name": "Caport2020AppAPI",
+  "name": "CMCAppAPI",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -30,8 +30,8 @@
     "should": "^4.0.4"
   },
   "apidoc": {
-    "name": "Cagliari Port 2020 Application API",
-    "title": "Caport2020AppAPI",
+    "name": "CRS4 Microservice Core Application API",
+    "title": "CMCAppAPI",
     "url": "http://smartapi.crs4.it/api/app/v1",
     "header": {
       "title": "API Overview",

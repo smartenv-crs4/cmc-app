@@ -3,7 +3,7 @@ var findAllFn = require('./metadata').findAll;
 var Schema = mongoose.Schema;
 
 
-var conf=require('../config').conf;
+var conf = require('../config').conf;
 
 
 var validateEmail = function (email) {
@@ -11,8 +11,8 @@ var validateEmail = function (email) {
     return re.test(email)
 };
 
-var appSch= conf.AppSchema || {
-        _id: {type: Schema.Types.ObjectId, index:true}, // id in Authentication microservice
+var appSch = conf.AppSchema || {
+        _id: {type: Schema.Types.ObjectId, index: true}, // id in Authentication microservice
         name: String,
         email: {
             type: String,
@@ -23,7 +23,7 @@ var appSch= conf.AppSchema || {
             validate: [validateEmail, 'Please fill a valid email address'],
             match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
         },
-        avatar:String,
+        avatar: String,
         // password: String,  // passportLocalMongoose manage hash and salt information
         notes: String
     };

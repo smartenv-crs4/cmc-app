@@ -1,28 +1,27 @@
+function customTestConfig(config) {
 
-function customTestConfig(config){
+    var testConfig = config.testConfig;
 
-    var testConfig=config.testConfig;
+    var adminAppToken = testConfig.adminokens.concat(testConfig.apptokens);
+    var adminAuthAppToken = testConfig.adminokens.concat(testConfig.authApptokens);
+    var adminAppAuthAppToken = testConfig.adminokens.concat(testConfig.authApptokens).concat(testConfig.apptokens);
 
-    var adminAppToken=testConfig.adminokens.concat(testConfig.apptokens);
-    var adminAuthAppToken=testConfig.adminokens.concat(testConfig.authApptokens);
-    var adminAppAuthAppToken=testConfig.adminokens.concat(testConfig.authApptokens).concat(testConfig.apptokens);
-
-    testConfig.myWebUITokenToSignUP=config.auth_token;
+    testConfig.myWebUITokenToSignUP = config.auth_token;
     testConfig.appTypeTest = {
-                    "name": "Micio",
-                    "email": "mario@caport.com",
-                    "password": "miciomicio",
-                    "avatar":"noAvatar",
-                    "type":testConfig.apptokens[0]
+        "name": "Micio",
+        "email": "mario@caport.com",
+        "password": "miciomicio",
+        "avatar": "noAvatar",
+        "type": testConfig.apptokens[0]
     };
-    testConfig.webUiAppTest={
-                  "email": "webui@webui.it",
-                  "password": "miciomicio",
-                  "type": testConfig.authApptokens[0]
+    testConfig.webUiAppTest = {
+        "email": "webui@webui.it",
+        "password": "miciomicio",
+        "type": testConfig.authApptokens[0]
     };
-    testConfig.adminLogin={
-                  "username": "admin@admin.com",
-                  "password": "admin"
+    testConfig.adminLogin = {
+        "username": "admin@admin.com",
+        "password": "admin"
     };
 
     testConfig.AuthRoles = [
@@ -41,9 +40,8 @@ function customTestConfig(config){
         {URI: "/apps/:id/actions/disable", token: testConfig.adminokens, method: "POST"},
         {URI: "/apps/actions/email/find/:term", token: testConfig.adminokens, method: "GET"}
     ];
-    testConfig.webUiID="";
+    testConfig.webUiID = "";
 }
-
 
 
 module.exports.customTestConfig = customTestConfig;
