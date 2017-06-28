@@ -7,7 +7,6 @@
     "limit":50,
     "skip":0,
     "logfile":"/var/log/CMC-App-Microservice.log",
-    "authProtocol":"http",
     "authUrl":"your_auth_service_url",
     "userUrl":"your_user_service_url",
     "auth_token":"your_auth_service_token",
