@@ -1,5 +1,4 @@
  {
-
   "dev":{
     "dbHost":"your_db_host",
     "dbPort":"27017",
