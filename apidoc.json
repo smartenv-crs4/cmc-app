@@ -1,0 +1,14 @@
+{
+  "name": "CMC (CRS4 Microservice Core) App API",
+  "description": "APIs to handle third-party app integration",
+  "url": "http://smartapi.crs4.it/api/app/v1",
+  "header": {
+    "title": "API Overview",
+    "filename": "header.md"
+  },
+  "footer": {
+  "title": "Maintained by CRS4",
+  "filename": "footer.md"
+  },
+  "sampleUrl":"http://smartapi.crs4.it/api/appdemo/v1"
+}
