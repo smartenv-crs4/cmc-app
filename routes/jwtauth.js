@@ -57,27 +57,30 @@ exports.decodeToken = function (req, res, next) {
         var decoded = null;
 
         request.post(rqparams, function (error, response, body) {
-
-            if (error) {
-                console.log("ERROR:" + error);
-                return res.status(500).send({error: 'internal_microservice_error', error_message: error + " "});
-            } else {
-
-                decoded = JSON.parse(body);
-
-                if (_.isUndefined(decoded.valid)) {
-                    return res.status(response.statusCode).send({
-                        error: decoded.error,
-                        error_message: decoded.error_message
-                    });
+            try {
+                if (error) {
+                    console.log("ERROR:" + error);
+                    return res.status(500).send({error: 'internal_microservice_error', error_message: error + " "});
                 } else {
-                    if (decoded.valid == true) {
-                        req.User_App_Token = decoded.token;
-                        next();
+
+                    decoded = JSON.parse(body);
+
+                    if (_.isUndefined(decoded.valid)) {
+                        return res.status(response.statusCode).send({
+                            error: decoded.error,
+                            error_message: decoded.error_message
+                        });
                     } else {
-                        return res.status(401).send({error: 'Unauthorized', error_message: decoded.error_message});
+                        if (decoded.valid == true) {
+                            req.User_App_Token = decoded.token;
+                            next();
+                        } else {
+                            return res.status(401).send({error: 'Unauthorized', error_message: decoded.error_message});
+                        }
                     }
                 }
+            }catch (ex){
+                return res.status(500).send(ex);
             }
         });
 

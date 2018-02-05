@@ -36,13 +36,17 @@ exports.setConfig = function (callback) {
                 headers: {'Authorization': "Bearer " + conf.auth_token}
             };
             request.get(rqparams, function (error, response, body) {
-                if (error) {
-                    callback({error: 'internal_User_microservice_error', error_message: error + ""}, null);
+                try {
+                    if (error) {
+                        callback({error: 'internal_User_microservice_error', error_message: error + ""}, null);
 
-                } else {
-                    var appT = JSON.parse(body).superuser;
-                    conf.adminUser = appT;
-                    clb(null, appT);
+                    } else {
+                        var appT = JSON.parse(body).superuser;
+                        conf.adminUser = appT;
+                        clb(null, appT);
+                    }
+                }catch (ex){
+                    callback({error:"InternalError", error_message:ex},null);
                 }
             });
         },
@@ -52,13 +56,17 @@ exports.setConfig = function (callback) {
                 headers: {'Authorization': "Bearer " + conf.auth_token}
             };
             request.get(rqparams, function (error, response, body) {
-                if (error) {
-                    clb({error: 'internal_User_microservice_error', error_message: error + ""}, null);
+                try {
+                    if (error) {
+                        clb({error: 'internal_User_microservice_error', error_message: error + ""}, null);
 
-                } else {
-                    var appT = JSON.parse(body).superapp;
-                    conf.AdminAuthorizedApp = appT;
-                    clb(null, appT);
+                    } else {
+                        var appT = JSON.parse(body).superapp;
+                        conf.AdminAuthorizedApp = appT;
+                        clb(null, appT);
+                    }
+                }catch (ex){
+                    callback({error:"InternalError", error_message:ex},null);
                 }
             });
         },

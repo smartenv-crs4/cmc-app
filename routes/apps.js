@@ -290,61 +290,67 @@ router.post('/signup', [jwtMiddle.decodeToken], function (req, res) {
     };
 
     request.post(rqparams, function (error, response, body) {
-
-        if (error) {
-            return res.status(500).send({error: 'internal_microservice_error', error_message: error + ""});
-        } else {
-
-            console.log("signUp response body" + body);
-            var loginToken = JSON.parse(body);
-
-            if (!loginToken.error) { // ho un token valido
-                application._id = loginToken.userId;
-                delete application['password'];
-                delete application['type'];
-                delete loginToken['userId'];
-                try {
-                    Application.create(application, function (err, newApp) {
-                        if (err) {
-                            rqparams = {
-                                url: microserviceBaseURL + '/authapp/' + application._id,
-                                headers: {'Authorization': "Bearer " + microserviceToken}
-                            };
-
-                            request.delete(rqparams, function (error, response, body) {
-                                if (error)
-                                    console.log("inconsistent data");
-                                //TODO Create an inconsistent data queue. If the user creation is not completed and wiping that user in auth does not succeed, the data can be inconsistent
-                            });
-                            return res.status(500).send({error: 'internal_Error', error_message: err});
-
-                        } else {
-                            var tmpU = JSON.parse(JSON.stringify(newApp));
-                            console.log("new application:" + util.inspect(tmpU));
-                            delete tmpU['__v'];
-                            return res.status(201).send({"created_resource": tmpU, "access_credentials": loginToken});
-                        }
-                    });
-                } catch (ex) {
-                    rqparams = {
-                        url: microserviceBaseURL + '/authapp/' + application._id,
-                        headers: {'Authorization': "Bearer " + microserviceToken}
-                    };
-
-                    request.delete(rqparams, function (error, response, body) {
-                        if (error)
-                            console.log("inconsistent data");
-                        //TODO Create an inconsistent data queue. If the user creation is not completed and wiping that user in auth does not succeed, the data can be inconsistent
-
-                    });
-                    return res.status(500).send({
-                        error: "signup_error",
-                        error_message: 'Unable to register application (err:' + ex + ')'
-                    });
-                }
+        try {
+            if (error) {
+                return res.status(500).send({error: 'internal_microservice_error', error_message: error + ""});
             } else {
-                return res.status(response.statusCode).send(loginToken);
+
+                console.log("signUp response body" + body);
+                var loginToken = JSON.parse(body);
+
+                if (!loginToken.error) { // ho un token valido
+                    application._id = loginToken.userId;
+                    delete application['password'];
+                    delete application['type'];
+                    delete loginToken['userId'];
+                    try {
+                        Application.create(application, function (err, newApp) {
+                            if (err) {
+                                rqparams = {
+                                    url: microserviceBaseURL + '/authapp/' + application._id,
+                                    headers: {'Authorization': "Bearer " + microserviceToken}
+                                };
+
+                                request.delete(rqparams, function (error, response, body) {
+                                    if (error)
+                                        console.log("inconsistent data");
+                                    //TODO Create an inconsistent data queue. If the user creation is not completed and wiping that user in auth does not succeed, the data can be inconsistent
+                                });
+                                return res.status(500).send({error: 'internal_Error', error_message: err});
+
+                            } else {
+                                var tmpU = JSON.parse(JSON.stringify(newApp));
+                                console.log("new application:" + util.inspect(tmpU));
+                                delete tmpU['__v'];
+                                return res.status(201).send({
+                                    "created_resource": tmpU,
+                                    "access_credentials": loginToken
+                                });
+                            }
+                        });
+                    } catch (ex) {
+                        rqparams = {
+                            url: microserviceBaseURL + '/authapp/' + application._id,
+                            headers: {'Authorization': "Bearer " + microserviceToken}
+                        };
+
+                        request.delete(rqparams, function (error, response, body) {
+                            if (error)
+                                console.log("inconsistent data");
+                            //TODO Create an inconsistent data queue. If the user creation is not completed and wiping that user in auth does not succeed, the data can be inconsistent
+
+                        });
+                        return res.status(500).send({
+                            error: "signup_error",
+                            error_message: 'Unable to register application (err:' + ex + ')'
+                        });
+                    }
+                } else {
+                    return res.status(response.statusCode).send(loginToken);
+                }
             }
+        }catch (ex){
+            return res.status(500).send(ex);
         }
     });
 
@@ -428,19 +434,22 @@ router.post('/signin', [jwtMiddle.decodeToken], function (req, res) {
     };
 
     request.post(rqparams, function (error, response, body) {
+        try {
+            if (error) {
+                return res.status(500).send({error: 'internal_microservice_error', error_message: error + ""});
+            } else {
 
-        if (error) {
-            return res.status(500).send({error: 'internal_microservice_error', error_message: error + ""});
-        } else {
+                console.log("signUp response body" + body);
+                var loginToken = JSON.parse(body);
 
-            console.log("signUp response body" + body);
-            var loginToken = JSON.parse(body);
+                if (!loginToken.error) { // ho un token valido
+                    return res.status(200).send({"access_credentials": loginToken});
+                }
+                else  return res.status(response.statusCode).send(loginToken);
 
-            if (!loginToken.error) { // ho un token valido
-                return res.status(200).send({"access_credentials": loginToken});
             }
-            else  return res.status(response.statusCode).send(loginToken);
-
+        }catch (ex){
+            return res.status(500).send(ex);
         }
     });
 
@@ -916,25 +925,32 @@ router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function (req, 
                     };
 
                     request.get(rqparams, function (error, response, body) {
+                        try {
+                            if (error) {
+                                callback({error: 'internal_App_microservice_error', error_message: error + ""}, "two");
 
-                        if (error) {
-                            callback({error: 'internal_App_microservice_error', error_message: error + ""}, "two");
-
-                        } else {
-                            var appT = JSON.parse(body).user;
-                            if (_.without(appT, conf.adminUser).indexOf(req.User_App_Token.type) >= 0) {
-                                callback({
-                                    err_code: 401,
-                                    error: "Forbidden",
-                                    error_message: 'you are not authorized to access this resource'
-                                }, "two");
                             } else {
-                                tmpbody = {
-                                    reset_token: reset_token,
-                                    newpassword: newpassword
-                                };
-                                callback(null, 'two');
+                                var appT = JSON.parse(body).user;
+                                if (_.without(appT, conf.adminUser).indexOf(req.User_App_Token.type) >= 0) {
+                                    callback({
+                                        err_code: 401,
+                                        error: "Forbidden",
+                                        error_message: 'you are not authorized to access this resource'
+                                    }, "two");
+                                } else {
+                                    tmpbody = {
+                                        reset_token: reset_token,
+                                        newpassword: newpassword
+                                    };
+                                    callback(null, 'two');
+                                }
                             }
+                        }catch (ex){
+                            callback({
+                                err_code:500,
+                                error:"InternalError",
+                                error_message:ex
+                            });
                         }
                     });
                 }
