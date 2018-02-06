@@ -90,9 +90,7 @@ describe('Apps API', function () {
 
 
     function deleteFromAuth(id, done) {
-        var gw = _.isEmpty(conf.apiGwAuthBaseUrl) ? "" : conf.apiGwAuthBaseUrl;
-        gw = _.isEmpty(conf.apiVersion) ? gw : gw + "/" + conf.apiVersion;
-        var url = conf.authUrl;
+        var url = conf.authUrl + '/authapp/'+id;
         applicationId = null;
         request.delete({
             url: url,

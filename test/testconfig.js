@@ -48,7 +48,7 @@ function customTestConfig(config) {
     };
 
     testConfig.AuthRoles = [
-        {URI: "/users/signin", token: testConfig.authApptokens, method: "POST"},
+        {URI: "/users/signin", token: testConfig.authApptokens, method: "POST",ms:"userms"},
         {URI: "/apps", token: testConfig.adminokens, method: "GET"},
         {URI: "/apps", token: testConfig.adminokens, method: "POST"},
         {URI: "/apps/:id", token: adminAppToken, method: "GET"},

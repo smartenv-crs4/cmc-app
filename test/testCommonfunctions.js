@@ -45,7 +45,7 @@ exports.setAuthMsMicroservice = function (doneCallback) {
                     var env = JSON.parse(body).env;
                     console.log("BDY " + body);
                     if (env == "dev") {
-                        request.get(conf.userProtocol + "://" + conf.userUrl + "/env", function (error, response, body) {
+                        request.get(conf.userUrl + "/env", function (error, response, body) {
 
                             if (error) {
                                 throw error;
@@ -162,14 +162,15 @@ exports.setAuthMsMicroservice = function (doneCallback) {
                     headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token},
                     body: JSON.stringify({
                         microservice: {
-                            name: "userms",
+                            name: value.ms || "appms",
                             URI: value.URI,
                             authToken: value.token,
                             method: value.method
                         }
                     })
                 };
-                //console.log("ROLE: " + value.method + " ---> " + value.URI);
+
+                console.log("-----------------> " + rqparams.body);
                 request.post(rqparams, function (error, response, body) {
                     console.log("#######################" + rqparams.body + " ---> " + body);
                     if (error) {

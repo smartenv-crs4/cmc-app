@@ -133,7 +133,6 @@ describe('Apps API', function () {
 
                 if (error) console.log("######   ERROR: " + error + "  ######");
                 else {
-                    //console.log("ERR MSG:" + body);
                     response.statusCode.should.be.equal(200);
                     var results = JSON.parse(body);
 
@@ -281,9 +280,7 @@ describe('Apps API', function () {
 
 
     function deleteFromAuth(id, done) {
-        var gw = _.isEmpty(conf.apiGwAuthBaseUrl) ? "" : conf.apiGwAuthBaseUrl;
-        gw = _.isEmpty(conf.apiVersion) ? gw : gw + "/" + conf.apiVersion;
-        var url = conf.authUrl;
+        var url = conf.authUrl + '/authapp/'+id;
         clientId = null;
         request.delete({
             url: url,
