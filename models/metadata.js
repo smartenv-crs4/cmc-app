@@ -29,6 +29,12 @@ var _ = require('underscore')._;
 exports.findAll = function findAll(schema, entityName, conditions, fields, options, callback) {
 
     var opt = options ? options : {skip: conf.skip, limit: conf.limit};
+
+    if((opt.skip==-1) || (opt.limit==-1)) {
+        delete opt.skip;
+        delete opt.limit;
+    }
+
     schema.find(conditions, fields, opt, function (err, result) {
         if (!err) {
             schema.count(conditions, function (err, count) {

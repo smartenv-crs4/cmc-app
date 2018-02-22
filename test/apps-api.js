@@ -323,6 +323,209 @@ describe('Apps API', function () {
     }
 
 
+
+
+    describe('POST /actions/search', function(){
+
+        it('must search and return all apps ', function(done){
+            var bodyParam=JSON.stringify({searchterm:{}});
+            var requestParams={
+                url:APIURL+'/actions/search',
+                headers:{'content-type': 'application/json','Authorization' : "Bearer "+ adminToken},
+                body:bodyParam
+            };
+            request.post(requestParams,function(error, response, body){
+                if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
+                else{
+                    response.statusCode.should.be.equal(200);
+                    var results = JSON.parse(response.body);
+                    results.should.have.property('_metadata');
+                    results.should.have.property('apps');
+                    results._metadata.totalCount.should.be.equal(100);
+                    //results.users[0].type.should.be.equal(userStandard.type);
+                }
+                done();
+            });
+
+        });
+    });
+
+
+
+    describe('POST /actions/search', function(){
+
+        it('must return one app of a type set in query ', function(done){
+            createUser(function(token){
+                if(token){
+                    console.log(token);
+                    var url = APIURL+'/actions/search'; //?type='+userStandard.type;
+                    var requestParams={
+                        url:url,
+                        headers:{'content-type': 'application/json','Authorization' : "Bearer "+ adminToken},
+                        body:JSON.stringify({searchterm:{email:appStandard.email,type:appStandard.type}})
+                    };
+                    request.post(requestParams,function(error, response, body){
+                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
+                        else{
+                            console.log(body);
+                            response.statusCode.should.be.equal(200);
+                            var results = JSON.parse(response.body);
+                            results.should.have.property('_metadata');
+                            results.should.have.property('apps');
+                            results._metadata.totalCount.should.be.equal(1);
+                            results.apps[0].type.should.be.equal(appStandard.type);
+                        }
+                        done();
+                    });
+                }else{
+                    token.should.be.not(null);
+                }
+            })
+
+        });
+    });
+
+
+    describe('POST /actions/search', function(){
+
+        it('must return one app of all type as set in query ', function(done){
+            createUser(function(token){
+                if(token){
+                    console.log(token);
+                    var url = APIURL+'/actions/search'; //?type='+userStandard.type;
+                    var requestParams={
+                        url:url,
+                        headers:{'content-type': 'application/json','Authorization' : "Bearer "+ adminToken},
+                        body:JSON.stringify({searchterm:{email:appStandard.email,type:'All'}})
+                    };
+                    request.post(requestParams,function(error, response, body){
+                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
+                        else{
+                            //console.log(body);
+                            response.statusCode.should.be.equal(200);
+                            var results = JSON.parse(response.body);
+                            results.should.have.property('_metadata');
+                            results.should.have.property('apps');
+                            results._metadata.totalCount.should.be.equal(1);
+                            results.apps[0].type.should.be.equal(appStandard.type);
+                        }
+                        done();
+                    });
+                }else{
+                    token.should.be.not(null);
+                }
+            })
+
+        });
+    });
+
+
+    describe('POST /actions/search', function(){
+
+        it('must return one app of all type as set in query. fields name ', function(done){
+            createUser(function(token){
+                if(token){
+                    console.log(token);
+                    var url = APIURL+'/actions/search'; //?type='+userStandard.type;
+                    var requestParams={
+                        url:url,
+                        headers:{'content-type': 'application/json','Authorization' : "Bearer "+ adminToken},
+                        body:JSON.stringify({fields:["name"],searchterm:{email:appStandard.email,type:'All'}})
+                    };
+                    request.post(requestParams,function(error, response, body){
+                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
+                        else{
+                            //console.log(body);
+                            response.statusCode.should.be.equal(200);
+                            var results = JSON.parse(response.body);
+                            results.should.have.property('_metadata');
+                            results.should.have.property('apps');
+                            results._metadata.totalCount.should.be.equal(1);
+                            results.apps[0].type.should.be.equal(appStandard.type);
+                            results.apps[0].should.have.property('name');
+                            results.apps[0].should.have.property('type');
+                            results.apps[0].should.not.have.property('avatar');
+                            results.apps[0].should.not.have.property('notes');
+                        }
+                        done();
+                    });
+                }else{
+                    token.should.be.not(null);
+                }
+            })
+
+        });
+    });
+
+
+
+    describe('POST /actions/search', function(){
+
+        it('must return one app by name search ', function(done){
+            createUser(function(token){
+                if(token){
+                    console.log(token);
+                    var url = APIURL+'/actions/search'; //?type='+userStandard.type;
+                    var requestParams={
+                        url:url,
+                        headers:{'content-type': 'application/json','Authorization' : "Bearer "+ adminToken},
+                        body:JSON.stringify({searchterm:{name:appStandard.name.substring(1,3)}})
+                    };
+                    request.post(requestParams,function(error, response, body){
+                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
+                        else{
+                            //console.log(body);
+                            response.statusCode.should.be.equal(200);
+                            var results = JSON.parse(response.body);
+                            results.should.have.property('_metadata');
+                            results.should.have.property('apps');
+                            results._metadata.totalCount.should.be.equal(1);
+                        }
+                        done();
+                    });
+                }else{
+                    token.should.be.not(null);
+                }
+            })
+
+        });
+    });
+
+
+    describe('POST /actions/search', function(){
+
+        it('must not found a apps of a type set in query ', function(done){
+            createUser(function(token){
+                if(token){
+                    console.log(token);
+                    var url = APIURL+'/actions/search'; //?type='+userStandard.type;
+                    var requestParams={
+                        url:url,
+                        headers:{'content-type': 'application/json','Authorization' : "Bearer "+ adminToken},
+                        body:JSON.stringify({searchterm:{email:appStandard.email,type:"notexist"}})
+                    };
+                    request.post(requestParams,function(error, response, body){
+                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
+                        else{
+                            //console.log(body);
+                            response.statusCode.should.be.equal(200);
+                            var results = JSON.parse(response.body);
+                            results.should.have.property('_metadata');
+                            results.should.have.property('apps');
+                            results._metadata.totalCount.should.be.equal(0);
+                            results.apps.length.should.be.equal(0);
+                        }
+                        done();
+                    });
+                }else{
+                    token.should.be.not(null);
+                }
+            })
+
+        });
+    });
+
+
     describe('GET /authapp/:id', function () {
 
         it('must return a app by id, all fields', function (done) {
@@ -335,7 +538,6 @@ describe('Apps API', function () {
                     }, function (error, response, body) {
                         if (error) console.log("######   ERROR: 401 2 " + error + "  ######");
                         else {
-                            console.log(body);
                             response.statusCode.should.be.equal(200);
                             var results = JSON.parse(response.body);
                             results.should.have.property('email');

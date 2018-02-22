@@ -30,6 +30,7 @@ var jwtMiddle = require('./jwtauth');
 var conf = require('../config').conf;
 var async = require('async');
 var request = require('request');
+var array_merge=require('array-merge-by-key');
 
 var microserviceBaseURL = conf.authUrl;
 var microserviceToken = conf.auth_token;
@@ -466,6 +467,7 @@ router.post('/signin', [jwtMiddle.decodeToken], function (req, res) {
  * Set pagination skip and limit and other filters in the URL request, e.g. "get /users?skip=10&limit=50&name=Mario"
  * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
  * If set, the same token sent in Authorization header should be undefined
+ * If you need a filter by _id you can done it by set field 'appsId'. appsId field can be in ObjectId on a ObjectId array.
  * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
  * @apiHeaderExample {json} Header-Example:
  *     {
@@ -496,6 +498,17 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
         fields = '-hash -salt -__v -_id';
 
     var query = {};
+
+    var ids=req.query.appsId;
+
+    if(ids) {
+        if (_.isArray(ids)) { //is an array
+            query._id={ "$in": ids };
+        } else {
+            query._id=ids;
+        }
+    }
+
 
     for (var v in req.query)
         if (Application.schema.path(v))
@@ -1195,6 +1208,7 @@ router.delete('/:id', [jwtMiddle.decodeToken], function (req, res) {
  * @apiVersion 1.0.0
  * @apiName Search Application
  * @apiGroup Application
+ * @apiDeprecated use now (#Application:Search Applications).
  *
  * @apiDescription Protected by admin access token, returns the paginated list of all Applications matching the search term.
  * To set pagination skip and limit, you can do it in the URL request, e.g. "get /apps?skip=10&limit=50"
@@ -1220,26 +1234,248 @@ router.delete('/:id', [jwtMiddle.decodeToken], function (req, res) {
  * @apiUse ServerError
  * @apiSampleRequest off
  */
-router.get('actions/email/find/:term', jwtMiddle.decodeToken, function (req, res) {
+router.get('/actions/email/find/:term', jwtMiddle.decodeToken, function (req, res) {
 
-    var term = req.param.term,
-        size = req.query.size ? parseInt(req.query.size) : 10,
-        query = {},
-        sortParams = {};
 
-    if (!term) return res.json({'status': true, err: 1, 'message': 'term not found', data: []});
 
-    query.email = new RegExp(term, 'i');
+   return util.deprecate( function() {
+        var term = req.params.term,
+            size = req.query.size ? parseInt(req.query.size) : 10,
+            query = {},
+            sortParams = {};
 
-    Application.find(query, null, {
-        limit: size,
-        sort: sortParams
-    }, function (err, data) {
-        if (err) return res.json({'status': false, 'err': err});
+        if (!term) return res.json({'status': true, err: 1, 'message': 'term not found', data: [], 'warning':'actions/email/find/:term route is deprecated. Use /actions/search route instead'});
 
-        return res.json({status: true, data: data});
+        query.email = new RegExp(term, 'i');
+
+        Application.find(query, null, {
+            limit: size,
+            sort: sortParams
+        }, function (err, data) {
+            try {
+                if (err) return res.json({'status': false, 'err': err, 'warning':'actions/email/find/:term route is deprecated. Use /actions/search route instead'});
+
+                return res.json({status: true, data: data, 'warning':'actions/email/find/:term route is deprecated. Use /actions/search route instead'});
+            }catch (ex){
+                return res.status(500).send({error:"InternalError", error_message: ex,'warning':'actions/email/find/:term route is deprecated. Use /actions/search route instead'});
+            }
+        });
+    }, 'actions/email/find/:term route is deprecated. Use /actions/search route instead.')();
+
+
+
+});
+
+
+
+// function foo(req,callback){
+//     var term = req.params.term,
+//         size = req.query.size ? parseInt(req.query.size) : 10,
+//         query = {},
+//         sortParams = {};
+//
+//     if (!term) return callback({'status': true, err: 1, 'message': 'term not found', data: []});
+//
+//     query.email = new RegExp(term, 'i');
+//
+//     Application.find(query, null, {
+//         limit: size,
+//         sort: sortParams
+//     }, function (err, data) {
+//         console.log("FOOOO");
+//         try {
+//             if (err) return callback({'status': false, 'err': err});
+//
+//             return callback({status: true, data: data});
+//         }catch (ex){
+//             return callback(ex);
+//         }
+//     });
+// }
+
+
+/**
+ * @api {get} /apps/ Search all Applications
+ * @apiVersion 1.0.0
+ * @apiName Search Applications
+ * @apiGroup Application
+ *
+ * @apiDescription Protected by admin access token, returns a list of all Applications that match a search terms.
+ * If you need a filter by _id you can done it by set field 'usersId'. appsId field can be in ObjectId on a ObjectId array.
+ *
+ * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (body Parameter) {Object} searchterm                   Object containing search terms
+ * @apiParam (body Parameter) {String} [searchterm.type]            String containing Application type filter. If filter is not set, app type information are not available in search results. If app type filter is not needed but app type information are, set type to "all"
+ * @apiParam (body Parameter) {String} [searchterm.ApplicationsField_1]     String containing a filter on Applications field "ApplicationsField_1", e.g. ApplicationsField_1 : "ApplicationsField_1_Substring"
+ * @apiParam (body Parameter) {String} [searchterm.ApplicationsField_2]     String containing a filter on Applications field "ApplicationsField_2", e.g. ApplicationsField_2 : "ApplicationsField_2_Substring"
+ * @apiParam (body Parameter) {String} [searchterm.ApplicationsField_3]     String containing a filter on Applications field "ApplicationsField_N", e.g. ApplicationsField_N : "ApplicationsField_N_Substring"
+ * @apiParam (body Parameter) {Array} fields Array of strings containing the name of all the Application fields that must be returned
+ *
+ * @apiParamExample {json} Request-Example:
+ * HTTP/1.1 POST request
+ *  Body:{ "searchterm":{"email": "@prova.it" , "type":"crocierista"}, fields:["name"]}
+ * @apiUse Metadata
+ * @apiUse GetResource
+ * @apiUse GetResourceExample
+ * @apiUse Unauthorized
+ * @apiUse BadRequest
+ * @apiUse ServerError
+ */
+
+
+router.post('/actions/search', [jwtMiddle.decodeToken], function (req, res,next) {
+
+
+
+    if (!req.body) return res.status(400).send({error: "BadRequest", error_message: "body missing"});
+    if (!req.body.searchterm) return res.status(400).send({error: "BadRequest", error_message: "mandatory 'searchterm' body param not found"});
+
+    if (req.body.fields && !(Array.isArray(req.body.fields)) ) return res.status(400).send({
+        error: "BadRequest",
+        error_message: "field param must be an array"
+    });
+
+
+    var fields = req.body.fields;
+
+    if (!fields)
+        fields = '-hash -salt -__v';
+    else
+        fields = fields.join(" ");
+
+
+
+    var searchterm=req.body.searchterm;
+
+
+
+    var query = {};
+
+    var ids=(searchterm.aoosId) || null;
+
+    if(ids) {
+        if (_.isArray(ids)) { //is an array
+            query._id={ "$in": ids };
+        } else {
+            query._id=ids;
+        }
+    }
+
+
+
+    for (var v in searchterm) {
+        if (Application.schema.path(v)) {
+            query[v] = new RegExp(searchterm[v], 'i');
+        }
+    }
+
+
+
+
+    var typeOption=query.type || searchterm.type || null;
+    if(typeOption){
+        delete query.type;
+    }
+
+
+    Application.find(query, fields, function(err, results){
+
+        try {
+            if (!err) {
+
+                if (results) {
+                    var responseResults={apps:results,_metadata:{totalCount:results.length, skip:-1,limit:-1}};
+
+                    if (typeOption && (responseResults._metadata.totalCount>0))
+                        upgradeUserInfo(res, responseResults,typeOption);
+                    else
+                        res.status(200).send(responseResults);
+                }
+                else
+                    res.status(204).send();
+            }
+            else {
+                res.status(500).send({error: 'internal_error', error_message: 'something blew up, ERROR:' + err});
+            }
+        }catch (ex){
+            return res.status(500).send({error: 'internal_error', error_message: 'something blew up, ERROR:' + ex});
+        }
     });
 
 });
+
+
+
+
+
+function upgradeUserInfo(res, results,type){
+
+
+    // get usersId
+    var ids=_.map(results.apps,function(element){
+        return element.id;
+    });
+
+
+    //make a request to authMs
+    var rqparams = {
+        url: microserviceBaseURL + "/authapp/actions/ids/find",
+        headers: {'Authorization': "Bearer " + microserviceToken, 'content-type': 'application/json'},
+        body: JSON.stringify({ids:ids,fields:["type"]})
+    };
+
+    request.post(rqparams, function (error, response, body) {
+
+        try {
+            if (error) {
+                return res.status(500).send({
+                    error: 'InternalError',
+                    error_message: error + ""
+                });
+            } else {
+
+                var parsedBody = JSON.parse(body);
+                if (parsedBody.error) {
+                    return res.status(response.statusCode).send(parsedBody);
+                } else {
+
+                    var authUserResults= JSON.parse(body);
+
+                    if(authUserResults._metadata.totalCount>0 && (authUserResults._metadata.totalCount==results._metadata.totalCount)){
+                        var usersList=array_merge("_id", JSON.parse(JSON.stringify(results.apps)),authUserResults.apps);
+
+                        if(type.toLowerCase()!='all'){
+                            type=type.toLowerCase();
+                            usersList=_.filter(usersList, function(currentUser){
+                                return (currentUser.type.toLowerCase()==type);
+                            });
+                        }
+
+                        results.apps=usersList;
+                        results._metadata.totalCount=usersList.length;
+                        return res.status(200).send(results);
+                    }else{
+                        return res.status(409).send({
+                            error: 'conflict',
+                            error_message: "Inconsistent User Data between userms and authms"
+                        });
+                    }
+                }
+            }
+        }catch (ex){
+            return res.status(500).send({
+                error: 'InternalError',
+                error_message: ex + ""
+            });
+        }
+    });
+}
+
 
 module.exports = router;
