@@ -1380,7 +1380,13 @@ router.post('/actions/search', [jwtMiddle.decodeToken], function (req, res,next)
 
     var typeOption=query.type || searchterm.type || null;
     if(typeOption){
+        if(!_.isArray(typeOption))
+            return res.status(400).send({
+                error: "BadRequest",
+                error_message: "field searchterm.type must be an array"
+            });
         delete query.type;
+
     }
 
 
@@ -1450,10 +1456,14 @@ function upgradeUserInfo(res, results,type){
                     if(authUserResults._metadata.totalCount>0 && (authUserResults._metadata.totalCount==results._metadata.totalCount)){
                         var usersList=array_merge("_id", JSON.parse(JSON.stringify(results.apps)),authUserResults.apps);
 
-                        if(type.toLowerCase()!='all'){
-                            type=type.toLowerCase();
+
+                        type=type.map(function(val){
+                            return val.toLowerCase();
+                        });
+
+                        if(type[0]!='all'){
                             usersList=_.filter(usersList, function(currentUser){
-                                return (currentUser.type.toLowerCase()==type);
+                                return (type.indexOf(currentUser.type.toLowerCase())>=0);
                             });
                         }
 
