@@ -1357,7 +1357,7 @@ router.post('/actions/search', [jwtMiddle.decodeToken], function (req, res,next)
 
     var query = {};
 
-    var ids=(searchterm.aoosId) || null;
+    var ids=(searchterm.appsId) || null;
 
     if(ids) {
         if (_.isArray(ids)) { //is an array

@@ -526,6 +526,43 @@ describe('Apps API', function () {
     });
 
 
+
+    describe('POST /actions/search', function(){
+
+        it('must search one app by id', function(done){
+
+            Apps.findOne({},function(err,userID){
+                if(!err){
+                    var url = APIURL+'/actions/search'; //?type='+userStandard.type;
+                    var requestParams={
+                        url:url,
+                        headers:{'content-type': 'application/json','Authorization' : "Bearer "+ adminToken},
+                        body:JSON.stringify({searchterm:{appsId:[userID._id]}})
+                    };
+                    request.post(requestParams,function(error, response, body){
+                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
+                        else{
+                            //console.log(body);
+                            response.statusCode.should.be.equal(200);
+                            var results = JSON.parse(response.body);
+                            results.should.have.property('_metadata');
+                            results.should.have.property('apps');
+                            results._metadata.totalCount.should.be.equal(1);
+                            results.apps.length.should.be.equal(1);
+                            var usId=JSON.stringify(userID._id);
+                            (usId).should.be.equal(JSON.stringify(results.apps[0]._id));
+                        }
+                        done();
+                    });
+                }else{
+                    err.should.be(null);
+                }
+            });
+
+        });
+    });
+
+
     describe('GET /authapp/:id', function () {
 
         it('must return a app by id, all fields', function (done) {
