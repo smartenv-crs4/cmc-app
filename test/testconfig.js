@@ -30,25 +30,11 @@ function customTestConfig(config) {
     var adminAppAuthAppToken = testConfig.adminokens.concat(testConfig.authApptokens).concat(testConfig.apptokens);
 
     testConfig.myWebUITokenToSignUP = config.auth_token;
-    testConfig.appTypeTest = {
-        "name": "Micio",
-        "email": "mario@caport.com",
-        "password": "miciomicio",
-        "avatar": "noAvatar",
-        "type": testConfig.apptokens[0]
-    };
-    testConfig.webUiAppTest = {
-        "email": "webui@webui.it",
-        "password": "miciomicio",
-        "type": testConfig.authApptokens[0]
-    };
-    testConfig.adminLogin = {
-        "username": "admin@admin.com",
-        "password": "admin"
-    };
+    testConfig.appTypeTest.type= testConfig.apptokens[0];
+    testConfig.webUiAppTest.type= testConfig.authApptokens[0];
 
     testConfig.AuthRoles = [
-        {URI: "/users/signin", token: testConfig.authApptokens, method: "POST",ms:"userms"},
+        {URI: "/users/signin", token: testConfig.authApptokens, method: "POST",ms:config.testConfig.userMsName},
         {URI: "/apps", token: testConfig.adminokens, method: "GET"},
         {URI: "/apps", token: testConfig.adminokens, method: "POST"},
         {URI: "/apps/:id", token: adminAppToken, method: "GET"},

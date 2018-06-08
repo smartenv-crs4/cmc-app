@@ -12,7 +12,23 @@
     "testConfig":{
       "apptokens":["AppTest1"],
       "authApptokens":["webui"],
-      "adminokens":["admin"]
+      "adminokens":["admin"],
+      "appTypeTest" : {
+        "name": "Micio",
+        "email": "mario@caport.com",
+        "password": "miciomicio",
+        "avatar": "noAvatar"
+      },
+      "webUiAppTest" : {
+        "email": "webui@webui.it",
+        "password": "miciomicio"
+      },
+      "adminLogin": {
+        "username": "admin@admin.com",
+        "password": "admin"
+      },
+      "msName":"cmc-app",
+      "userMsName":"cmc-user"
     }
   },
 

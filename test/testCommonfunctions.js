@@ -162,7 +162,7 @@ exports.setAuthMsMicroservice = function (doneCallback) {
                     headers: {'content-type': 'application/json', 'Authorization': "Bearer " + conf.auth_token},
                     body: JSON.stringify({
                         microservice: {
-                            name: value.ms || "appms",
+                            name: value.ms || conf.testConfig.msName,
                             URI: value.URI,
                             authToken: value.token,
                             method: value.method

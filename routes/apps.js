@@ -465,6 +465,7 @@ router.post('/signin', [jwtMiddle.decodeToken], function (req, res) {
  *
  * @apiDescription Protected by admin access token, returns the paginated list of all Applications.
  * Set pagination skip and limit and other filters in the URL request, e.g. "get /users?skip=10&limit=50&name=Mario"
+  filter by type are not valid, use search actions to filter by application type
  * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
  * If set, the same token sent in Authorization header should be undefined
  * If you need a filter by _id you can done it by set field 'appsId'. appsId field can be in ObjectId on a ObjectId array.
@@ -493,6 +494,9 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
     //TODO: returns ALL users, must be changed to return only authorized users
 
     var fields = req.dbQueryFields;
+    var notReturnType=false;
+    if((fields && (!fields.indexOf('type')>=0)) || (fields && (!fields.indexOf('TYPE')>=0)) || (fields && (fields.indexOf('-type')>=0)) || (fields && (fields.indexOf('-TYPE')>=0)))
+        notReturnType=true;
 
     if (!fields)
         fields = '-hash -salt -__v -_id';
@@ -509,22 +513,28 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
         }
     }
 
-
     for (var v in req.query)
         if (Application.schema.path(v))
             query[v] = req.query[v];
 
     Application.findAll(query, fields, req.dbPagination, function (err, results) {
+        try {
+            if (!err) {
 
-        if (!err) {
-
-            if (results)
-                res.status(200).send(results);
-            else
-                res.status(204).send();
-        }
-        else {
-            res.status(500).send({error: 'internal_error', error_message: 'something blew up, ERROR:' + err});
+                if (results){
+                    if(notReturnType)
+                        res.status(200).send(results);
+                    else
+                        upgradeUserInfo(res, results,["all"]);
+                }
+                else
+                    res.status(204).send();
+            }
+            else {
+                res.status(500).send({error: 'internal_error', error_message: 'something blew up, ERROR:' + err});
+            }
+        }catch (ex){
+            return res.status(500).send({error:"InternalError", error_message:ex});
         }
     });
 
@@ -534,7 +544,7 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
 /**
  * @api {get} /apps/:id Get Application by id
  * @apiVersion 1.0.0
- * @apiName GetApplication
+ * @apiName GetApplication by id
  * @apiGroup Application
  *
  * @apiDescription Accessible by admin access tokens or by the application itself, returns the info about application.
@@ -571,21 +581,45 @@ router.get('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
     //given an authenticated user (by token)
 
     var fields = req.dbQueryFields;
+    var notReturnType=false;
+
+    if((fields && (!fields.indexOf('type')>=0)) || (fields && (!fields.indexOf('TYPE')>=0)) || (fields && (fields.indexOf('-type')>=0)) || (fields && (fields.indexOf('-TYPE')>=0)))
+        notReturnType=true;
+
     if (!fields)
         fields = '-hash -salt -__v -_id';
 
     var id = (req.params.id).toString();
 
     Application.findById(id, fields, function (err, results) {
-        if (!err) {
-            res.send(results);
-        }
-        else {
-            if (results === {} || results === undefined) res.status(404).send({
-                error: 'notFound',
-                error_message: 'application not found'
-            });
-            else res.status(500).send({error: 'internal_error', error_message: 'something blew up, ERROR:' + err});
+        try {
+            if (!err) {
+                if(notReturnType)
+                    res.send(results);
+                else{
+                    var rqparams = {
+                        url: microserviceBaseURL + "/authapp/"+id,
+                        headers: {'Authorization': "Bearer " + microserviceToken, 'content-type': 'application/json'},
+                    };
+
+                    request.get(rqparams, function (error, response) {
+                        if(error) res.status(500).send({error: 'internal_error', error_message: 'something blew up in get application Type from auth ms, ERROR:' + err});
+
+                        var resultWithType=_.clone(results);
+                        resultWithType.type=response.body.type || null;
+                        res.send(resultWithType);
+                    });
+                }
+            }
+            else {
+                if (results === {} || results === undefined) res.status(404).send({
+                    error: 'notFound',
+                    error_message: 'application not found'
+                });
+                else res.status(500).send({error: 'internal_error', error_message: 'something blew up, ERROR:' + err});
+            }
+        }catch (ex){
+            return res.status(500).send({error:"InternalError", error_message:ex});
         }
     });
 
@@ -670,12 +704,13 @@ router.put('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
         return res.status(401).send({error: "Forbidden", error_message: 'only admins users can update email'});
     }
 
-    if (!(conf.adminUser.indexOf(req.User_App_Token.type) >= 0) && newVals.type) {
-        return res.status(401).send({
-            error: "Forbidden",
-            error_message: 'only admins users can update application type'
-        });
+
+
+    if (newVals.type) {
+        return res.status(400).send({error: "BadRequest", error_message: 'to update Application type must use "actions/setapptype/:type" endpoint'});
     }
+
+
 
     Application.findOneAndUpdate({_id: id}, newVals, {new: true}, function (err, results) {
 
@@ -997,11 +1032,13 @@ router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function (req, 
 });
 
 
+
 /**
- * @api {post} /apps/:id/actions/changeuserid Change User Id (email)
+ * @api {post} /apps/:id/actions/changeuserid Change Application username (email)
  * @apiVersion 1.0.0
- * @apiName ChangeUserId
+ * @apiName ChangeUserID
  * @apiGroup Application
+ * @apiDeprecated use now (#Application:ChangeUsername).
  *
  * @apiDescription Protected by admin access token, updates an application username (email).
  *
@@ -1057,6 +1094,135 @@ router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req,
     }
 
 });
+
+
+
+
+
+/**
+ * @api {post} /apps/:id/actions/changeusername Change Application username (email)
+ * @apiVersion 1.0.0
+ * @apiName ChangeUsername
+ * @apiGroup Application
+ *
+ * @apiDescription Protected by admin access token, updates an application username (email).
+ *
+ * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL parameter) {String} id        Application id or email
+ * @apiParam (Body parameter) {String} email    New application username (email)
+ *
+ * @apiParamExample {json} Request-Example:
+ * HTTP/1.1 GET request
+ *  Body:{ "email": "prov@prova.it"}
+ *
+ * @apiSuccess (200- OK) {Object} application dictionary with new updated username (email)
+ *
+ * @apiSuccessExample {json} Example: 200 OK
+ *      HTTP/1.1 200 OK
+ *      {
+ *        "name":"Micio",
+ *        "surname":"Macio",
+ *        "email": "prov@prova.it"
+ *      }
+ *
+ * @apiUse Unauthorized
+ * @apiUse NotFound
+ * @apiUse BadRequest
+ * @apiUse ServerError
+ * @apiSampleRequest off
+ */
+router.post('/:id/actions/changeusername', [jwtMiddle.decodeToken], function (req, res, next) {
+
+    var id = (req.params.id).toString();
+    req.url = "/" + id;
+
+    if (!req.body || !req.body.email)
+        return res.status(400).send({
+            error: "BadRequest",
+            error_message: "no email field in body. email are mandatory"
+        });
+
+    var body = {app: {email: req.body.email}};
+
+    req.body = body;
+    req.method = "PUT";
+    try {
+        router.handle(req, res, next);
+    } catch (ex) {
+        res.status(500).send({error: "InternalError", error_message: ex.toString()});
+    }
+
+});
+
+
+
+
+/**
+ * @api {post} /users/:id/actions/setusertype/:type Set or update Application type
+ * @apiVersion 1.0.0
+ * @apiName set or update App type
+ * @apiGroup Application
+ *
+ * @apiDescription Protected by access token, set or update Application type.
+ *
+ * @apiHeader {String} [Authorization] Unique access_token. If set, the same access_token in body or in query param must be undefined
+ * @apiHeaderExample {json} Header-Example:
+ *     {
+ *       "Authorization": "Bearer yJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtb2RlIjoidXNlciIsImlzcyI6IjU4YTMwNTcxM"
+ *     }
+ *
+ * @apiParam {String} [access_token] Access token that grants access to this resource. It must be sent in [ body || as query param ].
+ * If set, the same token sent in Authorization header should be undefined
+ * @apiParam (URL parameter) {String} id    The Application id
+ * @apiParam (URL parameter) {String} type  The Application type to set
+ *
+ * @apiSuccess (200 - OK) {String} User.id   The Application id
+ * @apiSuccess (200 - OK) {String} User.tye   The new Application type
+ *
+ * @apiSuccessExample {json} Example: 200 OK
+ *      HTTP/1.1 200 OK
+ *      {
+ *        "id":"02550564065",
+ *        "type":"admin"
+ *      }
+ *
+ * @apiUse Unauthorized
+ * @apiUse NotFound
+ * @apiUse BadRequest
+ * @apiUse ServerError
+ * @apiSampleRequest off
+ */
+router.post('/:id/actions/setapptype/:type', [jwtMiddle.decodeToken], function (req, res) {
+        "use strict";
+
+        var id = req.params.id;
+        var userType=req.params.type;
+
+        var rqparams = {
+            url: microserviceBaseURL + "/authuser/" + id + '/actions/setapptype/'+userType,
+            headers: {'Authorization': "Bearer " + microserviceToken}
+        };
+
+        request.post(rqparams, function (error, response, body) {
+            try {
+                if (error) {
+                    return res.status(500).send({error: 'internal_User_microservice_error', error_message: error + ""});
+                } else {
+                    return res.status(200).send(body);
+                }
+            }catch (ex){
+                return res.status(500).send(ex);
+            }
+        });
+    }
+);
+
 
 
 /**
