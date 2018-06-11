@@ -120,7 +120,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /app', function () {
+    describe('GET /apps', function () {
 
         it('must return ONE app and _metadata, all fields', function (done) {
 
@@ -156,7 +156,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp', function () {
+    describe('GET /apps', function () {
 
         it('must return 2 apps and _metadata, all fields', function (done) {
 
@@ -188,7 +188,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp', function () {
+    describe('GET /apps', function () {
 
         it('must return  error 400 for invalid token', function (done) {
 
@@ -210,7 +210,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp', function () {
+    describe('GET /apps', function () {
 
         it('must return  error 401 for not Autthorized token', function (done) {
 
@@ -232,7 +232,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp', function () {
+    describe('GET /apps', function () {
 
         it('must return  no error for invalid field', function (done) {
 
@@ -259,7 +259,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp', function () {
+    describe('GET /apps', function () {
 
         it('must return  error 400 for Access_token required', function (done) {
 
@@ -325,7 +325,7 @@ describe('Apps API', function () {
 
 
 
-    describe('POST /actions/search', function(){
+    describe('POST /apps/actions/search', function(){
 
         it('must search and return all apps ', function(done){
             var bodyParam=JSON.stringify({searchterm:{}});
@@ -352,7 +352,7 @@ describe('Apps API', function () {
 
 
 
-    describe('POST /actions/search', function(){
+    describe('POST /apps/actions/search', function(){
 
         it('must return one app of a type set in query ', function(done){
             createUser(function(token){
@@ -386,7 +386,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('POST /actions/search', function(){
+    describe('POST /apps/actions/search', function(){
 
         it('must return one app of all type as set in query ', function(done){
             createUser(function(token){
@@ -420,7 +420,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('POST /actions/search', function(){
+    describe('POST /apps/actions/search', function(){
 
         it('must return one app of all type as set in query. fields name ', function(done){
             createUser(function(token){
@@ -459,7 +459,7 @@ describe('Apps API', function () {
 
 
 
-    describe('POST /actions/search', function(){
+    describe('POST /apps/actions/search', function(){
 
         it('must return one app by name search ', function(done){
             createUser(function(token){
@@ -492,7 +492,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('POST /actions/search', function(){
+    describe('POST /apps/actions/search', function(){
 
         it('must not found a apps of a type set in query ', function(done){
             createUser(function(token){
@@ -527,7 +527,7 @@ describe('Apps API', function () {
 
 
 
-    describe('POST /actions/search', function(){
+    describe('POST /apps/actions/search', function(){
 
         it('must search one app by id', function(done){
 
@@ -563,7 +563,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp/:id', function () {
+    describe('GET /apps/:id', function () {
 
         it('must return a app by id, all fields', function (done) {
             createUser(function (token) {
@@ -592,7 +592,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp/:id', function () {
+    describe('GET /apps/:id', function () {
 
         it('must return a app by id, fields type', function (done) {
             createUser(function (token) {
@@ -621,7 +621,7 @@ describe('Apps API', function () {
         });
     });
 
-    describe('GET /authapp/:id', function () {
+    describe('GET /apps/:id', function () {
 
         it('must return a app by id, send an invalid field', function (done) {
             createUser(function (token) {
@@ -652,7 +652,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp/:id', function () {
+    describe('GET /apps/:id', function () {
 
         it('must return a 404, app not found', function (done) {
             createUser(function (token) {
@@ -678,7 +678,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp/:id', function () {
+    describe('GET /apps/:id', function () {
 
         it('must return a 401, app with invalid ID', function (done) {
             createUser(function (token) {
@@ -704,7 +704,34 @@ describe('Apps API', function () {
     });
 
 
-    describe('DELETE /app/:id', function () {
+    describe('GET /apps/:id', function(){
+
+        it('must test the app type field from auth', function(done){
+            createUser(function(token){
+                if(token){
+                    var url = APIURL+'/'+clientId;
+                    request.get({url:url,headers:{'Authorization' : "Bearer "+ token}},function(error, response, body){
+                        if(error) console.log("######   ERRORE: 401 2 " + error + "  ######");
+                        else{
+                            response.statusCode.should.be.equal(200);
+                            var results = JSON.parse(response.body);
+                            results.should.have.property('email');
+                            results.should.have.property('type');
+                            results.type.should.be.equal(appStandard.type);
+                            results.should.not.have.property('salt');
+                        }
+                        done();
+                    });
+                }else{
+                    token.should.be.not(null);
+                }
+            })
+
+        });
+    });
+
+
+    describe('DELETE /apps/:id', function () {
 
         it('must delete a app by id', function (done) {
             createUser(function (token) {
@@ -737,7 +764,8 @@ describe('Apps API', function () {
     });
 
 
-    describe('DELETE /app/:id', function () {
+
+    describe('DELETE /apps/:id', function () {
 
         it('must return error 404 in delete a app by invalid id', function (done) {
             createUser(function (token) {
@@ -766,7 +794,7 @@ describe('Apps API', function () {
     });
 
 
-    describe('GET /authapp/:id', function () {
+    describe('GET /apps/:id/actions/enable', function () {
 
         it('must disable and enable a App', function (done) {
             createUser(function (tokenUtente) {
