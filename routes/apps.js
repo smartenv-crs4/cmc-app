@@ -1200,29 +1200,34 @@ router.post('/:id/actions/changeusername', [jwtMiddle.decodeToken], function (re
  * @apiSampleRequest off
  */
 router.post('/:id/actions/setapptype/:type', [jwtMiddle.decodeToken], function (req, res) {
-        "use strict";
+    "use strict";
 
-        var id = req.params.id;
-        var userType=req.params.type;
+    var id = req.params.id;
+    var userType = req.params.type;
 
-        var rqparams = {
-            url: microserviceBaseURL + "/authuser/" + id + '/actions/setapptype/'+userType,
-            headers: {'Authorization': "Bearer " + microserviceToken}
-        };
+    var rqparams = {
+        url: microserviceBaseURL + "/authuser/" + id + '/actions/setapptype/' + userType,
+        headers: {'Authorization': "Bearer " + microserviceToken}
+    };
 
-        request.post(rqparams, function (error, response, body) {
-            try {
-                if (error) {
-                    return res.status(500).send({error: 'internal_User_microservice_error', error_message: error + ""});
-                } else {
-                    return res.status(200).send(body);
-                }
-            }catch (ex){
-                return res.status(500).send(ex);
-            }
-        });
-    }
-);
+    request.post(rqparams).pipe(res);
+
+
+    // request.post(rqparams, function (error, response, body) {
+    //         try {
+    //             if (error) {
+    //                 return res.status(500).send({error: 'internal_User_microservice_error', error_message: error + ""});
+    //             } else {
+    //                 return res.status(200).send(body);
+    //             }
+    //         }catch (ex){
+    //             return res.status(500).send(ex);
+    //         }
+    //     });
+    // }
+
+
+});
 
 
 
