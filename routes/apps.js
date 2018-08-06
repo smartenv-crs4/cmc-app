@@ -31,6 +31,7 @@ var conf = require('../config').conf;
 var async = require('async');
 var request = require('request');
 var array_merge=require('array-merge-by-key');
+var comminFunctions=require("./commonfunctions");
 
 var microserviceBaseURL = conf.authUrl;
 var microserviceToken = conf.auth_token;
@@ -681,11 +682,17 @@ router.put('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
     var id = (req.params.id).toString();
     var newVals;
 
+
+
+
     try {
-        newVals = req.body.application; // body already parsed
+        newVals = req.body.application || null; // body already parsed
     } catch (e) {
-        res.status(500).send({error: "update error", error_message: 'no application updated (error:' + e + ')'});
+        return res.status(500).send({error: "update error", error_message: 'no application updated (error:' + e + ')'});
     }
+
+    if(!newVals)
+        return res.status(400).send({error: "BadRequest", error_message: 'no mandatory application body field in request'});
 
     if (newVals.password) {
         return res.status(400).send({
@@ -701,9 +708,9 @@ router.put('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
         });
     }
 
-    if (!(conf.adminUser.indexOf(req.User_App_Token.type) >= 0) && newVals.email) {
-        return res.status(401).send({error: "Forbidden", error_message: 'only admins users can update email'});
-    }
+    // if (!(conf.adminUser.indexOf(req.User_App_Token.type) >= 0) && newVals.email) {
+    //     return res.status(401).send({error: "Forbidden", error_message: 'only admins users can update email'});
+    // }
 
 
 
@@ -711,29 +718,120 @@ router.put('/:id', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf],
         return res.status(400).send({error: "BadRequest", error_message: 'to update Application type must use "actions/setapptype/:type" endpoint'});
     }
 
-
-
-    Application.findOneAndUpdate({_id: id}, newVals, {new: true}, function (err, results) {
-
-        if (!err) {
-            if (results) {
-                var tmpU = JSON.parse(JSON.stringify(results));
-                console.log("new app:" + util.inspect(tmpU));
-                delete tmpU['__v'];
-                //delete tmpU['_id'];
-                res.status(200).send(tmpU);
-            }
-            else {
-                res.status(404).send({error: "Notfound", error_message: 'no application found with specified id'});
-            }
-
-        }
-        else {
-            res.status(500).send({error: "internal error", error_message: 'something blew up, ERROR:' + err});
+    updateApp(id,newVals,function(err,updateResults){
+        if(err){
+            return res.status(err).send(updateResults);
+        }else{
+            return res.status(200).send(updateResults);
         }
     });
 
+    // Application.findOneAndUpdate({_id: id}, newVals, {new: true}, function (err, results) {
+    //
+    //     if (!err) {
+    //         if (results) {
+    //             var tmpU = JSON.parse(JSON.stringify(results));
+    //             console.log("new app:" + util.inspect(tmpU));
+    //             delete tmpU['__v'];
+    //             //delete tmpU['_id'];
+    //             res.status(200).send(tmpU);
+    //         }
+    //         else {
+    //             res.status(404).send({error: "Notfound", error_message: 'no application found with specified id'});
+    //         }
+    //
+    //     }
+    //     else {
+    //         res.status(500).send({error: "internal error", error_message: 'something blew up, ERROR:' + err});
+    //     }
+    // });
+
 });
+
+
+
+function updateApp(id,newVals,callback){
+    if (newVals.email) {
+        updateAuthMsUserName(id,newVals.email,function(err,response){
+            if(err){
+                return callback(err,response);
+            }else{
+                upddateAppToDb(id,newVals,function(err,updateResults){
+                    if(err){
+                        // restore authMS
+                        try {
+                            var resp=JSON.parse(response);
+                            updateAuthMsUserName(id,resp.username.old,function(err,restore){
+                                if(err){
+                                    return callback(409,{error:"Conflict", error_message:"Inconsistent data between Auth and AppMs due to after an error on Application Update, was not possible to restore Auth"});
+                                }else{
+                                    return callback(err,updateResults);
+                                }
+                            });
+                        }catch (ex) {
+                            return callback(500,{error:"InternalServerError", error_message:"Error while update username " + ex});
+                        }
+
+                    }else{
+                        return callback(null,updateResults);
+                    }
+                });
+            }
+        });
+    }else{
+        upddateAppToDb(id,newVals,function(err,updateResults){
+            if(err){
+                return callback(err,updateResults);
+            }else{
+                return callback(null,updateResults);
+            }
+        });
+    }
+
+};
+
+
+function upddateAppToDb(id,newVals,callback){
+    Application.findOneAndUpdate({_id:id}, newVals, {new: true}, function (err, results) {
+
+        try {
+            if (!err) {
+                if (results) {
+                    var tmpU = JSON.parse(JSON.stringify(results));
+                    delete tmpU['__v'];
+                    return callback(null,tmpU);
+                }
+                else {
+                    return callback(404,{error: "application not found", error_message: 'no application found with specified id'});
+                }
+            }
+            else {
+                return callback(500,{error: "internal error", error_message: 'something blew up, ERROR:' + err});
+            }
+        }catch (ex){
+            return callback(500,{error: "internal error", error_message: 'something blew up, ERROR:' + ex});
+        }
+    });
+};
+
+function updateAuthMsUserName(id,username,callback){
+
+    var rqparams = {
+        url: microserviceBaseURL + "/authapp/" + id + '/actions/setusername/'+username,
+        headers: {'Authorization': "Bearer " + microserviceToken}
+    };
+
+    request.post(rqparams, function (error, response, body) {
+        if (error) {
+            return callback(500,{error: 'internal_User_microservice_error', error_message: error + ""});
+        } else {
+            return callback(null,body);
+        }
+
+    });
+}
+
+
 
 
 function enableDisable(req, res, value) {
@@ -1073,7 +1171,7 @@ router.post('/:id/actions/setpassword', [jwtMiddle.decodeToken], function (req, 
  * @apiUse ServerError
  * @apiSampleRequest off
  */
-router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req, res, next) {
+router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf,middlewares.ensureFieldAuthorisedForSomeUsers(comminFunctions.getAdminUsers,["email"],comminFunctions.getRequestBody)], function (req, res, next) {
 
     var id = (req.params.id).toString();
     req.url = "/" + id;
@@ -1084,7 +1182,9 @@ router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req,
             error_message: "no email field in body. email are mandatory"
         });
 
-    var body = {app: {email: req.body.email}};
+    req.fastForward=conf.fastForwardPsw;
+
+    var body = {application: {email: req.body.email}};
 
     req.body = body;
     req.method = "PUT";
@@ -1138,7 +1238,7 @@ router.post('/:id/actions/changeuserid', [jwtMiddle.decodeToken], function (req,
  * @apiUse ServerError
  * @apiSampleRequest off
  */
-router.post('/:id/actions/changeusername', [jwtMiddle.decodeToken], function (req, res, next) {
+router.post('/:id/actions/changeusername', [jwtMiddle.decodeToken, middlewares.ensureUserIsAdminOrSelf,middlewares.ensureFieldAuthorisedForSomeUsers(comminFunctions.getAdminUsers,["email"],comminFunctions.getRequestBody)], function (req, res, next) {
 
     var id = (req.params.id).toString();
     req.url = "/" + id;
@@ -1149,7 +1249,10 @@ router.post('/:id/actions/changeusername', [jwtMiddle.decodeToken], function (re
             error_message: "no email field in body. email are mandatory"
         });
 
-    var body = {app: {email: req.body.email}};
+    req.fastForward=conf.fastForwardPsw;
+
+    var body = {application: {email: req.body.email}};
+
 
     req.body = body;
     req.method = "PUT";

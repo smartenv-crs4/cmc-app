@@ -56,22 +56,29 @@ exports.parsePagination = function (req, res, next) {
 };
 
 exports.ensureUserIsAdminOrSelf = function (req, res, next) {
-
-    var id = (req.params.id).toString();
-
-    if (!req.User_App_Token)
-        return res.status(401).send({
-            error: "Forbidden",
-            error_message: 'you are not authorized to access the resource (no user in the request)'
-        });
-    if (!(((conf.adminUser.indexOf(req.User_App_Token.type) >= 0)) || (req.User_App_Token._id == id))) //if token belongs to a non-admin user and it's not that user
-        return res.status(401).send({
-            error: "Forbidden",
-            error_message: 'only ' + conf.adminUser + ' or the user itself are authorized to modify user fields. your Token Id:' + req.User_App_Token._id + " searchId:" + id
-        });
-    else
+    if(req.fastForward===conf.fastForwardPsw) {
         next();
+    }else {
+        var id = (req.params.id).toString();
 
+        if (!req.User_App_Token)
+            return res.status(401).send({
+                error: "Forbidden",
+                error_message: 'you are not authorized to access the resource (no user in the request)'
+            });
+
+        if (req.User_App_Token.mode === "developer") { // ckeck only if is developer token
+            if (!(((conf.adminUser.indexOf(req.User_App_Token.type) >= 0)) || (req.User_App_Token._id == id))) //if token belongs to a non-admin user and it's not that user
+                return res.status(401).send({
+                    error: "Forbidden",
+                    error_message: 'only ' + conf.adminUser + ' or the user itself are authorized to modify user fields. your Token Id:' + req.User_App_Token._id + " searchId:" + id
+                });
+            else
+                next();
+        }else{
+            next();
+        }
+    }
 };
 
 exports.parseOptions = function (req, res, next) {
@@ -85,4 +92,45 @@ exports.parseOptions = function (req, res, next) {
         req.sort = null;
     next();
 
+};
+
+
+exports.ensureFieldAuthorisedForSomeUsers = function(usersListFunction,fieldsToCkeck,reqFieldsFunction){
+
+
+    return (function(req,res,next){
+
+        if(req.fastForward===conf.fastForwardPsw) {
+            next();
+        }else {
+
+
+            if (!req.User_App_Token)
+                return res.status(500).send({
+                    error: "InternalError",
+                    error_message: 'decoded token not found in request'
+                });
+
+
+            if (req.User_App_Token.mode === "developer") { // ckeck only if is developer token
+
+                usersList = usersListFunction();
+                fields = reqFieldsFunction(req);
+
+                var filteredFields = _.filter(fieldsToCkeck, function (value) {
+                    return _.has(fields, value);
+                });
+
+                if (!(usersList.indexOf(req.User_App_Token.type) >= 0) && filteredFields.length > 0) {
+                    return res.status(401).send({
+                        error: "Forbidden",
+                        error_message: 'only ' + usersList + ' applications can set ' + filteredFields
+                    });
+                } else
+                    next();
+            }else{
+                next();
+            }
+        }
+    });
 };

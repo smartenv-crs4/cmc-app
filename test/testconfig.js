@@ -48,7 +48,8 @@ function customTestConfig(config) {
         {URI: "/apps/:id/actions/enable", token: testConfig.adminokens, method: "POST"},
         {URI: "/apps/:id/actions/disable", token: testConfig.adminokens, method: "POST"},
         {URI: "/apps/actions/email/find/:term", token: testConfig.adminokens, method: "GET"},
-        {URI: "/apps/actions/search",token:testConfig.adminokens, method:"post"}
+        {URI: "/apps/actions/search",token:testConfig.adminokens, method:"post"},
+        {URI: "/apps/:id/actions/changeusername",token:testConfig.adminokens, method:"post"}
     ];
     testConfig.webUiID = "";
 }

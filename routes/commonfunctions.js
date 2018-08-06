@@ -78,3 +78,16 @@ exports.setConfig = function (callback) {
     });
 
 };
+
+
+exports.getAdminUsers= function(){
+    return conf.adminUser;
+};
+
+exports.getRequestBodyUser= function(req){
+    return ((req.body && req.body.application) || {});
+};
+
+exports.getRequestBody= function(req){
+    return (req.body  || {});
+};
