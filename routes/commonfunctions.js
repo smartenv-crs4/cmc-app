@@ -26,6 +26,7 @@ var util = require('util');
 var request = require('request');
 var async = require('async');
 var _ = require('underscore');
+var redisSync=require('../routes/redisSync');
 
 exports.setConfig = function (callback) {
 
@@ -41,9 +42,12 @@ exports.setConfig = function (callback) {
                         callback({error: 'internal_User_microservice_error', error_message: error + ""}, null);
 
                     } else {
-                        var appT = JSON.parse(body).superuser;
-                        conf.adminUser = appT;
-                        clb(null, appT);
+                        var appT = JSON.parse(body);
+                        if(appT.redisChannel){
+                            redisSync.subscribe(appT.redisChannel,"adminUser");
+                        }
+                        conf.adminUser = appT.superuser;
+                        clb(null, appT.superuser);
                     }
                 }catch (ex){
                     callback({error:"InternalError", error_message:ex},null);
@@ -61,9 +65,14 @@ exports.setConfig = function (callback) {
                         clb({error: 'internal_User_microservice_error', error_message: error + ""}, null);
 
                     } else {
-                        var appT = JSON.parse(body).superapp;
-                        conf.AdminAuthorizedApp = appT;
-                        clb(null, appT);
+                        var appT = JSON.parse(body);
+
+                        if(appT.redisChannel){
+                            redisSync.subscribe(appT.redisChannel,"AdminAuthorizedApp");
+                        }
+                        conf.AdminAuthorizedApp = appT.superapp;
+                        clb(null, appT.superapp);
+
                     }
                 }catch (ex){
                     callback({error:"InternalError", error_message:ex},null);

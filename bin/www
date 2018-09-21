@@ -26,6 +26,9 @@
 var debug = require('debug')('CMC-App');
 var app = require('../app');
 var db = require("../models/db");
+var redisSync=require('../routes/redisSync');
+
+redisSync.setup();
 
 db.connect(function (err) {
 
@@ -48,6 +51,8 @@ process.on('SIGINT', function (code) {
         else {
             console.log('Disconnected from database');
         }
+        redisSync.unsubscribe();
+        redisSync.quit();
         process.exit(0);
     });
 

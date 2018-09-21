@@ -10,6 +10,12 @@
     "userUrl":"your_user_service_url",
     "auth_token":"your_auth_service_token",
     "fastForwardPsw":"f@5tF0rwardP5w",
+    "redisCache":{
+      "host": "YOUR_REDIS_HOST",
+      "port":  6379,
+      "db": 0,
+      "password":null
+    },
     "testConfig":{
       "apptokens":["AppTest1"],
       "authApptokens":["webui"],
@@ -42,6 +48,12 @@
     "logfile":"/var/log/CMC-App-Microservice.log",
     "authUrl":"your_auth_service_url",
     "auth_token":"your_auth_service_token",
-    "fastForwardPsw":"f@5tF0rwardP5w"
+    "fastForwardPsw":"f@5tF0rwardP5w",
+    "redisCache":{
+      "host": "YOUR_REDIS_HOST",
+      "port":  6379,
+      "db": 0,
+      "password":null
+    }
   }
  }
