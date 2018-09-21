@@ -30,7 +30,7 @@ var redisSync=require('../routes/redisSync');
 
 redisSync.setup();
 
-db.connect(function (err) {
+db.conect(function (err) {
 
     if (err) {
         console.log("Unable to connect to DB, err:" + err);
