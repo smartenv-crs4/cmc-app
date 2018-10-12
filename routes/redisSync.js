@@ -29,7 +29,6 @@ var adminUserSync={
 
     "channelToParam":{},
     "pendingSubscriptions":[],
-    "redisSubscriptions":[],
     "unsubscribe":function(){
     },
 
@@ -50,11 +49,12 @@ var adminUserSync={
         redisClient.on("ready", function (err) {
 
             adminUserSync.unsubscribe=function(){
-                _.each(adminUserSync.redisSubscriptions,function(channelval) {
-                    redisClient.unsubscribe(channelval);
+                _.each(adminUserSync.channelToParam, function(value,key){
+                    redisClient.unsubscribe(key);
                 });
-                adminUserSync.redisSubscriptions=[];
+                adminUserSync.channelToParam={};
             };
+
             adminUserSync.quit=function(){
                 adminUserSync.unsubscribe();
                 redisClient.quit();
@@ -63,19 +63,6 @@ var adminUserSync={
             adminUserSync.subscribe=function(channel,param){
                    redisClient.subscribe(channel);
                    adminUserSync.channelToParam[channel]=param;
-                   adminUserSync.redisSubscriptions.push(channel);
-
-                    adminUserSync.unsubscribe=function(){
-                        _.each(adminUserSync.channelToParam, function(value,key){
-                            redisClient.unsubscribe(key);
-                        });
-                        adminUserSync.channelToParam={};
-                    };
-                    adminUserSync.quit=function(){
-                        adminUserSync.unsubscribe();
-                        redisClient.quit();
-                    };
-
             };
 
             _.each(adminUserSync.pendingSubscriptions,function(val){
