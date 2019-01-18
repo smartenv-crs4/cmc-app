@@ -318,7 +318,10 @@ router.post('/signup', [jwtMiddle.decodeToken], function (req, res) {
                                         console.log("inconsistent data");
                                     //TODO Create an inconsistent data queue. If the user creation is not completed and wiping that user in auth does not succeed, the data can be inconsistent
                                 });
-                                return res.status(500).send({error: 'internal_Error', error_message: err});
+                                return res.status(500).send({
+                                    error: "signup_error",
+                                    error_message: 'Unable to register application (err:' + err + ')'
+                                });
 
                             } else {
                                 var tmpU = JSON.parse(JSON.stringify(newApp));
