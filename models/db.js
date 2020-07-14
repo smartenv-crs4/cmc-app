@@ -25,10 +25,16 @@ var mongoose = require('mongoose');
 var conf = require('../config').conf;
 var app = require('../app');
 var commonFunctions = require('../routes/commonfunctions');
-var dbUrl = conf.dbHost + ':' + conf.dbPort + '/' + conf.dbName;
+
+var dbAuth= conf.dbAuth.user ? conf.dbAuth.user + ":" + conf.dbAuth.psw + "@" : "";
+var authSource= conf.dbAuth.user ? "?authSource=admin" : "";
+var dbUrl =  "mongodb://" + dbAuth + conf.dbHost + ':' + conf.dbPort + '/' + conf.dbName + authSource;
+
+//var dbUrl = conf.dbHost + ':' + conf.dbPort + '/' + conf.dbName;
 
 var options = {
-    server: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}}
+    server: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}},
+    useNewUrlParser: true
 };
 
 exports.connect = function connect(callback) {

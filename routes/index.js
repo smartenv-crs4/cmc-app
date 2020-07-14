@@ -23,6 +23,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/apps').User;
+var conf = require('../config').conf;
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -38,6 +39,12 @@ router.get('/env', function (req, res) {
         env = 'production';
 
     res.status(200).send({env: env});
+});
+
+
+/* GET environment info page. */
+router.get('/running_env', function(req, res) {
+    res.status(200).send({conf:conf});
 });
 
 module.exports = router;

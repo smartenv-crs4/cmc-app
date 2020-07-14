@@ -3,6 +3,10 @@
     "dbHost":"your_db_host",
     "dbPort":"27017",
     "dbName":"CMCAPPDEV",
+    "dbAuth": {
+      "user": null,
+      "psw": null
+    },
     "limit":50,
     "skip":0,
     "logfile":"/var/log/CMC-App-Microservice.log",
@@ -43,6 +47,10 @@
     "dbHost":"your_db_host",
     "dbPort":"27017",
     "dbName":"CMCAPP",
+    "dbAuth": {
+      "user": null,
+      "psw": null
+    },
     "limit":50,
     "skip":0,
     "logfile":"/var/log/CMC-App-Microservice.log",

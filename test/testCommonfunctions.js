@@ -43,7 +43,7 @@ exports.setAuthMsMicroservice = function (doneCallback) {
                     throw error;
                 } else {
                     var env = JSON.parse(body).env;
-                    console.log("BDY " + body);
+                    console.log("BDY Auth " + body);
                     if (env == "dev") {
                         request.get(conf.userUrl + "/env", function (error, response, body) {
 
@@ -51,7 +51,7 @@ exports.setAuthMsMicroservice = function (doneCallback) {
                                 throw error;
                             } else {
                                 var env = JSON.parse(body).env;
-                                console.log("BDY " + body);
+                                console.log("BDY User" + body);
                                 if (env == "dev") {
                                     db.connect(function (err) {
                                         if (err) console.log("######   ERROR BEFORE : " + err + "  ######");
