@@ -503,7 +503,8 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
         notReturnType=true;
 
     if (!fields)
-        fields = '-hash -salt -__v -_id';
+        fields = '-hash -salt -__v';
+        // fields = '-hash -salt -__v -_id';
 
     var query = {};
 
@@ -526,7 +527,7 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
             if (!err) {
 
                 if (results){
-                    if(notReturnType)
+                    if(notReturnType || (results._metadata.totalCount===0))
                         res.status(200).send(results);
                     else
                         upgradeUserInfo(res, results,["all"]);
@@ -543,6 +544,7 @@ router.get('/', [jwtMiddle.decodeToken], function (req, res) {
     });
 
 });
+
 
 
 /**
@@ -1700,7 +1702,6 @@ router.post('/actions/search', [jwtMiddle.decodeToken], function (req, res,next)
 
 function upgradeUserInfo(res, results,type){
 
-
     // get usersId
     var ids=_.map(results.apps,function(element){
         return element.id;
@@ -1714,6 +1715,7 @@ function upgradeUserInfo(res, results,type){
         body: JSON.stringify({ids:ids,fields:["type"]})
     };
 
+
     request.post(rqparams, function (error, response, body) {
 
         try {
@@ -1724,12 +1726,13 @@ function upgradeUserInfo(res, results,type){
                 });
             } else {
 
-                var parsedBody = JSON.parse(body);
-                if (parsedBody.error) {
-                    return res.status(response.statusCode).send(parsedBody);
+                var authUserResults= JSON.parse(body);
+
+                if (authUserResults.error) {
+                    return res.status(response.statusCode).send(authUserResults);
                 } else {
 
-                    var authUserResults= JSON.parse(body);
+
 
                     if(authUserResults._metadata.totalCount>0 && (authUserResults._metadata.totalCount==results._metadata.totalCount)){
                         var usersList=array_merge("_id", JSON.parse(JSON.stringify(results.apps)),authUserResults.apps);
